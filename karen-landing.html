@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Karen — Die Mitarbeiterin die nie fehlt</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #FAF8F3;
+    --warm-white: #FFFEF9;
+    --ink: #1C1A17;
+    --ink-soft: #3D3A34;
+    --ink-muted: #7A766D;
+    --ink-faint: #B8B3A8;
+    --green: #2D6A4F;
+    --green-light: #52B788;
+    --green-pale: #D8F3DC;
+    --green-faint: #F0FAF2;
+    --border: rgba(28,26,23,0.1);
+    --border-soft: rgba(28,26,23,0.06);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    color: var(--ink);
+    overflow-x: hidden;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    padding: 0 2rem;
+    height: 60px;
+    display: flex; align-items: center; justify-content: space-between;
+    background: rgba(250,248,243,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 0.5px solid var(--border);
+  }
+
+  .nav-logo {
+    font-family: 'Lora', serif;
+    font-size: 20px;
+    font-weight: 500;
+    color: var(--ink);
+    letter-spacing: -0.02em;
+  }
+
+  .nav-logo span { color: var(--green); }
+
+  .nav-links {
+    display: flex; gap: 2rem; align-items: center;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-size: 14px;
+    color: var(--ink-muted);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--ink); }
+
+  .nav-cta {
+    padding: 8px 20px;
+    background: var(--ink);
+    color: var(--cream) !important;
+    border-radius: 100px;
+    font-size: 13px !important;
+    font-weight: 500;
+    transition: opacity 0.2s !important;
+  }
+
+  .nav-cta:hover { opacity: 0.8; color: var(--cream) !important; }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    padding: 120px 2rem 80px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    position: relative;
+  }
+
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 5px 14px;
+    background: var(--green-faint);
+    border: 0.5px solid rgba(45,106,79,0.2);
+    border-radius: 100px;
+    font-size: 12px;
+    color: var(--green);
+    font-weight: 500;
+    margin-bottom: 2rem;
+    animation: fade-up 0.6s ease-out both;
+  }
+
+  .hero-badge-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--green-light);
+    animation: dot-blink 2s ease-in-out infinite;
+  }
+
+  @keyframes dot-blink {
+    0%,100%{opacity:1} 50%{opacity:0.3}
+  }
+
+  .hero-title {
+    font-family: 'Lora', serif;
+    font-size: clamp(42px, 7vw, 80px);
+    font-weight: 400;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    max-width: 800px;
+    animation: fade-up 0.6s 0.1s ease-out both;
+  }
+
+  .hero-title em {
+    font-style: italic;
+    color: var(--green);
+  }
+
+  .hero-sub {
+    margin-top: 1.5rem;
+    font-size: clamp(16px, 2vw, 20px);
+    color: var(--ink-muted);
+    max-width: 520px;
+    line-height: 1.65;
+    font-weight: 300;
+    animation: fade-up 0.6s 0.2s ease-out both;
+  }
+
+  .hero-actions {
+    margin-top: 2.5rem;
+    display: flex; gap: 12px; flex-wrap: wrap; justify-content: center;
+    animation: fade-up 0.6s 0.3s ease-out both;
+  }
+
+  .btn-primary {
+    padding: 14px 32px;
+    background: var(--ink);
+    color: var(--cream);
+    border: none;
+    border-radius: 100px;
+    font-size: 15px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-decoration: none;
+    display: inline-block;
+  }
+
+  .btn-primary:hover { background: var(--green); transform: translateY(-1px); }
+
+  .btn-secondary {
+    padding: 14px 28px;
+    background: transparent;
+    color: var(--ink-soft);
+    border: 0.5px solid var(--border);
+    border-radius: 100px;
+    font-size: 15px;
+    font-family: 'DM Sans', sans-serif;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-decoration: none;
+    display: inline-block;
+  }
+
+  .btn-secondary:hover { background: white; border-color: rgba(28,26,23,0.2); }
+
+  .hero-visual {
+    margin-top: 4rem;
+    width: 100%;
+    max-width: 560px;
+    animation: fade-up 0.8s 0.4s ease-out both;
+  }
+
+  .phone-mockup {
+    background: var(--warm-white);
+    border: 0.5px solid var(--border);
+    border-radius: 20px;
+    padding: 20px;
+    text-align: left;
+    box-shadow: 0 20px 60px rgba(28,26,23,0.08);
+  }
+
+  .phone-header {
+    display: flex; align-items: center; gap: 10px;
+    padding-bottom: 14px;
+    border-bottom: 0.5px solid var(--border-soft);
+    margin-bottom: 14px;
+  }
+
+  .phone-avatar {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: var(--green-pale);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Lora', serif;
+    font-size: 14px;
+    color: var(--green);
+    font-weight: 500;
+  }
+
+  .phone-name { font-size: 14px; font-weight: 500; color: var(--ink); }
+  .phone-status { font-size: 11px; color: var(--green); display: flex; align-items: center; gap: 4px; }
+  .phone-status::before { content: ''; display: block; width: 5px; height: 5px; border-radius: 50%; background: var(--green-light); }
+
+  .msg-row { display: flex; flex-direction: column; gap: 8px; }
+
+  .msg {
+    max-width: 78%;
+    padding: 10px 14px;
+    border-radius: 16px;
+    font-size: 13px;
+    line-height: 1.5;
+    animation: msg-appear 0.4s ease-out both;
+  }
+
+  .msg.incoming {
+    background: #F0F0ED;
+    color: var(--ink-soft);
+    border-bottom-left-radius: 4px;
+    align-self: flex-start;
+  }
+
+  .msg.outgoing {
+    background: var(--ink);
+    color: #F5F3EE;
+    border-bottom-right-radius: 4px;
+    align-self: flex-end;
+  }
+
+  .msg.outgoing.karen {
+    background: var(--green);
+    color: #E8F5ED;
+  }
+
+  .msg-time { font-size: 10px; color: var(--ink-faint); margin-top: 2px; }
+  .msg-time.right { text-align: right; }
+
+  @keyframes msg-appear {
+    from { opacity: 0; transform: translateY(4px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .msg-1 { animation-delay: 0.6s; }
+  .msg-2 { animation-delay: 1.1s; }
+  .msg-3 { animation-delay: 1.9s; }
+  .msg-4 { animation-delay: 2.7s; }
+
+  @keyframes fade-up {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* SOCIAL PROOF */
+  .trust-bar {
+    padding: 1.5rem 2rem;
+    background: var(--warm-white);
+    border-top: 0.5px solid var(--border);
+    border-bottom: 0.5px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    gap: 2.5rem;
+    flex-wrap: wrap;
+  }
+
+  .trust-item {
+    font-size: 13px;
+    color: var(--ink-muted);
+    display: flex; align-items: center; gap: 7px;
+  }
+
+  .trust-icon {
+    width: 18px; height: 18px;
+    color: var(--green);
+  }
+
+  /* HOW IT WORKS */
+  section {
+    padding: 80px 2rem;
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+
+  .section-eyebrow {
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--green);
+    font-weight: 500;
+    margin-bottom: 0.75rem;
+  }
+
+  .section-title {
+    font-family: 'Lora', serif;
+    font-size: clamp(28px, 4vw, 44px);
+    font-weight: 400;
+    color: var(--ink);
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    max-width: 560px;
+  }
+
+  .section-title em { font-style: italic; color: var(--green); }
+
+  .steps-grid {
+    margin-top: 3rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1px;
+    background: var(--border);
+    border: 0.5px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+  }
+
+  .step-card {
+    background: var(--warm-white);
+    padding: 2rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .step-num {
+    font-family: 'Lora', serif;
+    font-size: 36px;
+    font-weight: 400;
+    color: var(--green-pale);
+    line-height: 1;
+  }
+
+  .step-title {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--ink);
+  }
+
+  .step-desc {
+    font-size: 13px;
+    color: var(--ink-muted);
+    line-height: 1.6;
+  }
+
+  /* WHO IS KAREN FOR */
+  .industries {
+    margin-top: 3rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 12px;
+  }
+
+  .industry-card {
+    background: var(--warm-white);
+    border: 0.5px solid var(--border);
+    border-radius: 14px;
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    transition: all 0.2s;
+    cursor: default;
+  }
+
+  .industry-card:hover {
+    border-color: rgba(45,106,79,0.3);
+    background: var(--green-faint);
+    transform: translateY(-2px);
+  }
+
+  .industry-icon {
+    font-size: 22px;
+    width: 40px; height: 40px;
+    background: var(--cream);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  .industry-name {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink);
+  }
+
+  .industry-example {
+    font-size: 11px;
+    color: var(--ink-muted);
+  }
+
+  /* PRICING */
+  .pricing-grid {
+    margin-top: 3rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 16px;
+  }
+
+  .price-card {
+    background: var(--warm-white);
+    border: 0.5px solid var(--border);
+    border-radius: 20px;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    position: relative;
+  }
+
+  .price-card.featured {
+    background: var(--ink);
+    border-color: var(--ink);
+  }
+
+  .price-tag {
+    display: inline-block;
+    padding: 3px 10px;
+    background: var(--green-pale);
+    color: var(--green);
+    font-size: 11px;
+    font-weight: 500;
+    border-radius: 100px;
+    width: fit-content;
+  }
+
+  .price-card.featured .price-tag {
+    background: rgba(82,183,136,0.2);
+    color: var(--green-light);
+  }
+
+  .price-name {
+    font-family: 'Lora', serif;
+    font-size: 22px;
+    font-weight: 400;
+    color: var(--ink);
+  }
+
+  .price-card.featured .price-name { color: var(--cream); }
+
+  .price-amount {
+    display: flex; align-items: baseline; gap: 4px;
+  }
+
+  .price-num {
+    font-size: 40px;
+    font-weight: 500;
+    color: var(--ink);
+    letter-spacing: -0.02em;
+    line-height: 1;
+  }
+
+  .price-card.featured .price-num { color: var(--cream); }
+
+  .price-period {
+    font-size: 13px;
+    color: var(--ink-muted);
+  }
+
+  .price-card.featured .price-period { color: rgba(250,248,243,0.5); }
+
+  .price-features {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .price-features li {
+    font-size: 13px;
+    color: var(--ink-soft);
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    line-height: 1.4;
+  }
+
+  .price-card.featured .price-features li { color: rgba(250,248,243,0.7); }
+
+  .check {
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    background: var(--green-pale);
+    color: var(--green);
+    font-size: 9px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .price-card.featured .check {
+    background: rgba(82,183,136,0.2);
+    color: var(--green-light);
+  }
+
+  .price-btn {
+    padding: 12px;
+    border-radius: 100px;
+    font-size: 14px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+    border: 0.5px solid var(--border);
+    background: transparent;
+    color: var(--ink);
+    text-decoration: none;
+    display: block;
+  }
+
+  .price-card.featured .price-btn {
+    background: var(--green);
+    border-color: var(--green);
+    color: white;
+  }
+
+  .price-btn:hover { opacity: 0.8; }
+
+  /* QUOTE */
+  .quote-section {
+    padding: 80px 2rem;
+    background: var(--ink);
+    text-align: center;
+  }
+
+  .quote-inner {
+    max-width: 680px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+  }
+
+  .big-quote {
+    font-family: 'Lora', serif;
+    font-size: clamp(24px, 4vw, 40px);
+    font-weight: 400;
+    font-style: italic;
+    color: var(--cream);
+    line-height: 1.35;
+    letter-spacing: -0.01em;
+  }
+
+  .big-quote em { color: var(--green-light); font-style: normal; }
+
+  .quote-sub {
+    font-size: 14px;
+    color: rgba(250,248,243,0.45);
+  }
+
+  /* WAITLIST */
+  .waitlist-section {
+    padding: 80px 2rem;
+    text-align: center;
+  }
+
+  .waitlist-inner {
+    max-width: 500px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+  }
+
+  .waitlist-form {
+    display: flex;
+    gap: 8px;
+    width: 100%;
+    flex-wrap: wrap;
+  }
+
+  .waitlist-input {
+    flex: 1;
+    min-width: 200px;
+    padding: 13px 18px;
+    background: var(--warm-white);
+    border: 0.5px solid var(--border);
+    border-radius: 100px;
+    font-size: 14px;
+    font-family: 'DM Sans', sans-serif;
+    color: var(--ink);
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .waitlist-input:focus { border-color: rgba(45,106,79,0.4); }
+  .waitlist-input::placeholder { color: var(--ink-faint); }
+
+  .waitlist-btn {
+    padding: 13px 24px;
+    background: var(--green);
+    color: white;
+    border: none;
+    border-radius: 100px;
+    font-size: 14px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+
+  .waitlist-btn:hover { background: var(--ink); }
+
+  .waitlist-note {
+    font-size: 12px;
+    color: var(--ink-faint);
+  }
+
+  /* FOOTER */
+  footer {
+    padding: 2rem;
+    border-top: 0.5px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .footer-logo {
+    font-family: 'Lora', serif;
+    font-size: 16px;
+    color: var(--ink);
+  }
+
+  .footer-logo span { color: var(--green); }
+
+  .footer-links {
+    display: flex; gap: 1.5rem; list-style: none;
+  }
+
+  .footer-links a {
+    font-size: 12px;
+    color: var(--ink-muted);
+    text-decoration: none;
+  }
+
+  .footer-copy {
+    font-size: 12px;
+    color: var(--ink-faint);
+  }
+
+  /* SUCCESS STATE */
+  .success-msg {
+    display: none;
+    padding: 12px 20px;
+    background: var(--green-faint);
+    border: 0.5px solid rgba(45,106,79,0.2);
+    border-radius: 100px;
+    font-size: 13px;
+    color: var(--green);
+    font-weight: 500;
+  }
+
+  @media (max-width: 600px) {
+    nav { padding: 0 1.25rem; }
+    .nav-links { display: none; }
+    section { padding: 60px 1.25rem; }
+    .trust-bar { gap: 1rem; padding: 1.25rem; }
+    footer { flex-direction: column; align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">Karen<span>.</span></div>
+  <ul class="nav-links">
+    <li><a href="#wie">Wie es funktioniert</a></li>
+    <li><a href="#branchen">Für wen</a></li>
+    <li><a href="#preise">Preise</a></li>
+    <li><a href="#waitlist" class="nav-cta">Jetzt starten</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-badge">
+    <div class="hero-badge-dot"></div>
+    Jetzt in der Beta — kostenlos testen
+  </div>
+
+  <h1 class="hero-title">
+    Die Mitarbeiterin<br>die <em>nie fehlt.</em>
+  </h1>
+
+  <p class="hero-sub">
+    Karen nimmt Anrufe an, bucht Termine und antwortet auf Nachrichten — 24 Stunden, 7 Tage. Für jeden Betrieb. Ohne Setup, ohne App, ohne Einarbeitung.
+  </p>
+
+  <div class="hero-actions">
+    <a href="#waitlist" class="btn-primary">Kostenlos starten</a>
+    <a href="#wie" class="btn-secondary">Wie funktioniert das?</a>
+  </div>
+
+  <div class="hero-visual">
+    <div class="phone-mockup">
+      <div class="phone-header">
+        <div class="phone-avatar">K</div>
+        <div>
+          <div class="phone-name">Karen · Sanitär Meier</div>
+          <div class="phone-status">Aktiv</div>
+        </div>
+      </div>
+      <div class="msg-row">
+        <div class="msg incoming msg-1">Hallo, ich wollte mal fragen ob Sie nächste Woche Zeit hätten für einen Wasserhahn?</div>
+        <div class="msg-time msg-1">14:32</div>
+        <div class="msg outgoing karen msg-2">Hallo! Natürlich, gerne. Wann passt es Ihnen — Montag oder Dienstag wäre noch frei. Vormittags oder nachmittags?</div>
+        <div class="msg-time right msg-2">14:32</div>
+        <div class="msg incoming msg-3">Dienstag nachmittag wäre super</div>
+        <div class="msg incoming msg-3" style="animation-delay:2.2s">So ab 15 Uhr?</div>
+        <div class="msg outgoing karen msg-4">Perfekt — Dienstag, 15 Uhr ist eingetragen. Herr Meier kommt persönlich vorbei. Darf ich kurz Ihre Adresse notieren?</div>
+        <div class="msg-time right msg-4" style="animation-delay:2.7s">14:33 · Karen hat den Termin gebucht</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TRUST BAR -->
+<div class="trust-bar">
+  <div class="trust-item">
+    <svg class="trust-icon" viewBox="0 0 18 18" fill="none"><path d="M9 1l2.2 4.5L16 6.3l-3.5 3.4.8 4.8L9 12.1l-4.3 2.4.8-4.8L2 6.3l4.8-.8L9 1z" fill="#52B788"/></svg>
+    Keine App nötig
+  </div>
+  <div class="trust-item">
+    <svg class="trust-icon" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="7.5" stroke="#52B788" stroke-width="1.2"/><path d="M6 9l2 2 4-4" stroke="#52B788" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    Setup in 10 Minuten
+  </div>
+  <div class="trust-item">
+    <svg class="trust-icon" viewBox="0 0 18 18" fill="none"><path d="M9 1v4M9 13v4M1 9h4M13 9h4" stroke="#52B788" stroke-width="1.4" stroke-linecap="round"/><circle cx="9" cy="9" r="3" stroke="#52B788" stroke-width="1.2"/></svg>
+    24/7 verfügbar
+  </div>
+  <div class="trust-item">
+    <svg class="trust-icon" viewBox="0 0 18 18" fill="none"><rect x="2" y="5" width="14" height="10" rx="1.5" stroke="#52B788" stroke-width="1.2"/><path d="M5 5V4a4 4 0 018 0v1" stroke="#52B788" stroke-width="1.2"/></svg>
+    DSGVO konform
+  </div>
+  <div class="trust-item">
+    <svg class="trust-icon" viewBox="0 0 18 18" fill="none"><path d="M3 9l4 4 8-8" stroke="#52B788" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    Kein Vertrag
+  </div>
+</div>
+
+<!-- HOW IT WORKS -->
+<section id="wie">
+  <p class="section-eyebrow">Wie es funktioniert</p>
+  <h2 class="section-title">Einmal einrichten.<br><em>Für immer</em> da.</h2>
+
+  <div class="steps-grid">
+    <div class="step-card">
+      <div class="step-num">01</div>
+      <div class="step-title">Sie erzählen Karen von Ihrem Betrieb</div>
+      <div class="step-desc">Name, Leistungen, Preise, Öffnungszeiten — Karen lernt Ihren Betrieb in einem kurzen Gespräch kennen. Kein Formular, kein Handbuch.</div>
+    </div>
+    <div class="step-card">
+      <div class="step-num">02</div>
+      <div class="step-title">Karen nimmt ab — für Ihre Kunden</div>
+      <div class="step-desc">Anrufe, WhatsApp, Webseiten-Chat. Karen antwortet sofort, freundlich und kompetent — als wäre sie seit Jahren dabei.</div>
+    </div>
+    <div class="step-card">
+      <div class="step-num">03</div>
+      <div class="step-title">Termine landen automatisch im Kalender</div>
+      <div class="step-desc">Karen bucht direkt — kein Hin und Her, keine Zettel. Sie bekommen eine Bestätigung. Ihr Kunde auch.</div>
+    </div>
+    <div class="step-card">
+      <div class="step-num">04</div>
+      <div class="step-title">Tägliche Zusammenfassung per WhatsApp</div>
+      <div class="step-desc">Jeden Morgen wissen Sie was passiert ist, was aussteht und was Karen für Sie erledigt hat. Keine App nötig.</div>
+    </div>
+  </div>
+</section>
+
+<!-- INDUSTRIES -->
+<section id="branchen" style="padding-top:0">
+  <p class="section-eyebrow">Für wen ist Karen</p>
+  <h2 class="section-title">Für jeden der<br><em>nie genug Zeit</em> hat.</h2>
+
+  <div class="industries">
+    <div class="industry-card">
+      <div class="industry-icon">🔧</div>
+      <div class="industry-name">Handwerk</div>
+      <div class="industry-example">Elektriker, Sanitär, Maler</div>
+    </div>
+    <div class="industry-card">
+      <div class="industry-icon">⚕️</div>
+      <div class="industry-name">Arztpraxen</div>
+      <div class="industry-example">Termine, Rückfragen, Infos</div>
+    </div>
+    <div class="industry-card">
+      <div class="industry-icon">⚖️</div>
+      <div class="industry-name">Kanzleien</div>
+      <div class="industry-example">Anwälte, Steuerberater</div>
+    </div>
+    <div class="industry-card">
+      <div class="industry-icon">✂️</div>
+      <div class="industry-name">Beauty & Wellness</div>
+      <div class="industry-example">Friseur, Kosmetik, Massage</div>
+    </div>
+    <div class="industry-card">
+      <div class="industry-icon">🍽️</div>
+      <div class="industry-name">Gastronomie</div>
+      <div class="industry-example">Reservierungen, Fragen</div>
+    </div>
+    <div class="industry-card">
+      <div class="industry-icon">🏠</div>
+      <div class="industry-name">Immobilien</div>
+      <div class="industry-example">Besichtigungen, Anfragen</div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="preise">
+  <p class="section-eyebrow">Preise</p>
+  <h2 class="section-title">Weniger als eine<br><em>Stunde Lohn.</em> Pro Monat.</h2>
+
+  <div class="pricing-grid">
+    <div class="price-card">
+      <div class="price-tag">Starter</div>
+      <div class="price-name">Karen Basis</div>
+      <div class="price-amount">
+        <span class="price-num">79</span>
+        <span class="price-period">€ / Monat</span>
+      </div>
+      <ul class="price-features">
+        <li><span class="check">✓</span>WhatsApp & Chat Antworten</li>
+        <li><span class="check">✓</span>Automatische Terminbuchung</li>
+        <li><span class="check">✓</span>Tägliche Zusammenfassung</li>
+        <li><span class="check">✓</span>Bis zu 200 Gespräche/Monat</li>
+        <li><span class="check">✓</span>Setup in 10 Minuten</li>
+      </ul>
+      <a href="#waitlist" class="price-btn">Jetzt starten</a>
+    </div>
+
+    <div class="price-card featured">
+      <div class="price-tag">Beliebt</div>
+      <div class="price-name">Karen Pro</div>
+      <div class="price-amount">
+        <span class="price-num">149</span>
+        <span class="price-period">€ / Monat</span>
+      </div>
+      <ul class="price-features">
+        <li><span class="check">✓</span>Alles aus Basis</li>
+        <li><span class="check">✓</span>Telefonannahme (24/7)</li>
+        <li><span class="check">✓</span>Angebots-Follow-up automatisch</li>
+        <li><span class="check">✓</span>Google-Bewertungs-Anfragen</li>
+        <li><span class="check">✓</span>Unbegrenzte Gespräche</li>
+        <li><span class="check">✓</span>Eigene Karen-Nummer</li>
+      </ul>
+      <a href="#waitlist" class="price-btn">Jetzt starten</a>
+    </div>
+
+    <div class="price-card">
+      <div class="price-tag">Für Teams</div>
+      <div class="price-name">Karen Business</div>
+      <div class="price-amount">
+        <span class="price-num">299</span>
+        <span class="price-period">€ / Monat</span>
+      </div>
+      <ul class="price-features">
+        <li><span class="check">✓</span>Alles aus Pro</li>
+        <li><span class="check">✓</span>Mehrere Mitarbeiter & Kalender</li>
+        <li><span class="check">✓</span>Eigenes Karen-Branding</li>
+        <li><span class="check">✓</span>API-Anbindung</li>
+        <li><span class="check">✓</span>Persönlicher Onboarding-Call</li>
+      </ul>
+      <a href="#waitlist" class="price-btn">Kontakt aufnehmen</a>
+    </div>
+  </div>
+</section>
+
+<!-- QUOTE -->
+<div class="quote-section">
+  <div class="quote-inner">
+    <p class="big-quote">
+      "Kein Mensch soll einen Auftrag verlieren<br>weil er gerade <em>beim Kunden</em> war."
+    </p>
+    <p class="quote-sub">— Die Idee hinter Karen</p>
+  </div>
+</div>
+
+<!-- WAITLIST -->
+<section id="waitlist">
+  <div class="waitlist-inner">
+    <p class="section-eyebrow" style="text-align:center">Beta — kostenlos</p>
+    <h2 class="section-title" style="text-align:center;max-width:400px">Seien Sie einer der<br><em>ersten Betriebe.</em></h2>
+    <p style="font-size:14px;color:var(--ink-muted);text-align:center;line-height:1.6">Wir richten Karen kostenlos für Ihren Betrieb ein. Keine Kreditkarte, kein Risiko. Einfach Ihre Nummer hinterlassen — wir melden uns innerhalb von 24 Stunden.</p>
+
+    <div class="waitlist-form">
+      <input type="tel" class="waitlist-input" placeholder="Ihre Handynummer" id="phoneInput">
+      <button class="waitlist-btn" onclick="submitWaitlist()">Kostenlos testen</button>
+    </div>
+    <div class="success-msg" id="successMsg">Perfekt — wir melden uns in den nächsten 24 Stunden bei Ihnen.</div>
+    <p class="waitlist-note">Kein Spam. Keine Weitergabe. Nur ein kurzes Gespräch mit Karen.</p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Karen<span>.</span></div>
+  <ul class="footer-links">
+    <li><a href="#">Datenschutz</a></li>
+    <li><a href="#">Impressum</a></li>
+    <li><a href="#">Kontakt</a></li>
+  </ul>
+  <p class="footer-copy">© 2025 Karen. Gemacht in Deutschland.</p>
+</footer>
+
+<script>
+function submitWaitlist() {
+  const input = document.getElementById('phoneInput');
+  const success = document.getElementById('successMsg');
+  if (input.value.trim().length > 6) {
+    input.style.display = 'none';
+    document.querySelector('.waitlist-btn').style.display = 'none';
+    success.style.display = 'block';
+  } else {
+    input.style.borderColor = 'rgba(200,60,60,0.4)';
+    input.placeholder = 'Bitte Nummer eingeben';
+  }
+}
+
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    e.preventDefault();
+    const target = document.querySelector(a.getAttribute('href'));
+    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+});
+</script>
+
+</body>
+</html>

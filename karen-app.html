@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Karen — Ihre KI-Assistentin</title>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#1A1917;--ink-soft:#3A3835;--ink-muted:#78746B;--ink-faint:#B5B0A5;
+  --cream:#FAF8F3;--white:#FFFEFB;
+  --green:#2D6A4F;--green-mid:#52B788;--green-pale:#D8F3DC;--green-faint:#F0FAF2;
+  --amber:#9A6B1F;--amber-pale:#FEF3DC;
+  --red:#A32D2D;--red-pale:#FCEBEB;
+  --blue:#185FA5;--blue-pale:#E6F1FB;
+  --border:rgba(26,25,23,0.1);--border-soft:rgba(26,25,23,0.06);
+  --shadow:0 2px 16px rgba(26,25,23,0.06);
+}
+body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--ink);height:100vh;overflow:hidden;display:flex;flex-direction:column}
+
+/* ── TOP NAV ── */
+.topnav{height:58px;display:flex;align-items:center;padding:0 1.25rem;gap:12px;background:var(--white);border-bottom:0.5px solid var(--border);flex-shrink:0;position:relative;z-index:20}
+.logo{font-family:'Lora',serif;font-size:20px;color:var(--ink);letter-spacing:-0.01em}
+.logo span{color:var(--green)}
+.nav-biz{flex:1;display:flex;align-items:center;justify-content:center}
+.biz-pill{display:flex;align-items:center;gap:7px;padding:5px 14px;background:var(--green-faint);border:0.5px solid rgba(45,106,79,0.15);border-radius:100px;font-size:12px;color:var(--green);font-weight:500;cursor:pointer}
+.biz-dot{width:6px;height:6px;border-radius:50%;background:var(--green-mid);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+.nav-right{display:flex;align-items:center;gap:8px}
+.icon-btn{width:36px;height:36px;border-radius:50%;border:0.5px solid var(--border);background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all 0.15s;position:relative}
+.icon-btn:hover{background:var(--cream)}
+.notif-badge{position:absolute;top:6px;right:6px;width:7px;height:7px;border-radius:50%;background:#E24B4A;border:1.5px solid var(--white)}
+
+/* ── TAB BAR ── */
+.tabbar{display:flex;background:var(--white);border-bottom:0.5px solid var(--border);flex-shrink:0}
+.tab{flex:1;padding:0;border:none;background:transparent;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px 4px 8px;font-family:'DM Sans',sans-serif;font-size:10px;color:var(--ink-faint);transition:color 0.2s;position:relative}
+.tab.active{color:var(--green)}
+.tab-icon{width:20px;height:20px;display:flex;align-items:center;justify-content:center}
+.tab-label{font-size:10px;font-weight:500}
+.tab-bar-indicator{position:absolute;bottom:0;left:20%;right:20%;height:2px;background:var(--green);border-radius:2px 2px 0 0;opacity:0;transition:opacity 0.2s}
+.tab.active .tab-bar-indicator{opacity:1}
+
+/* ── SCREENS ── */
+.screen{display:none;flex:1;overflow-y:auto;flex-direction:column}
+.screen.active{display:flex}
+
+/* ── SCREEN: HEUTE (HOME) ── */
+.home-header{padding:20px 16px 12px;display:flex;flex-direction:column;gap:4px}
+.home-greeting{font-family:'Lora',serif;font-size:22px;font-weight:400;letter-spacing:-0.01em}
+.home-greeting em{font-style:italic;color:var(--green)}
+.home-sub{font-size:13px;color:var(--ink-muted)}
+
+.stat-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;padding:0 16px 16px}
+.stat-card{background:var(--white);border:0.5px solid var(--border);border-radius:14px;padding:14px 12px;display:flex;flex-direction:column;gap:4px}
+.stat-num{font-size:26px;font-weight:500;letter-spacing:-0.02em;line-height:1}
+.stat-num.green{color:var(--green)}
+.stat-num.amber{color:var(--amber)}
+.stat-label{font-size:11px;color:var(--ink-muted);line-height:1.3}
+
+.section-head{padding:4px 16px 10px;display:flex;align-items:center;justify-content:space-between}
+.section-title{font-size:13px;font-weight:500;color:var(--ink)}
+.section-link{font-size:12px;color:var(--green);cursor:pointer}
+
+.activity-list{padding:0 16px;display:flex;flex-direction:column;gap:8px;padding-bottom:16px}
+.activity-item{background:var(--white);border:0.5px solid var(--border);border-radius:14px;padding:14px;display:flex;gap:12px;align-items:flex-start;cursor:pointer;transition:all 0.15s}
+.activity-item:hover{border-color:rgba(45,106,79,0.3);background:var(--green-faint)}
+.activity-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.activity-icon.booking{background:var(--green-pale)}
+.activity-icon.question{background:var(--blue-pale)}
+.activity-icon.emergency{background:var(--red-pale)}
+.activity-icon.forward{background:var(--amber-pale)}
+.activity-body{flex:1;min-width:0}
+.activity-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:2px}
+.activity-name{font-size:13px;font-weight:500;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.activity-time{font-size:11px;color:var(--ink-faint);flex-shrink:0}
+.activity-text{font-size:12px;color:var(--ink-muted);line-height:1.4;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.activity-badge{font-size:10px;padding:2px 8px;border-radius:100px;font-weight:500;margin-top:4px;display:inline-block}
+.badge-booking{background:var(--green-pale);color:var(--green)}
+.badge-question{background:var(--blue-pale);color:var(--blue)}
+.badge-emergency{background:var(--red-pale);color:var(--red)}
+.badge-forward{background:var(--amber-pale);color:var(--amber)}
+
+.summary-box{margin:0 16px 16px;background:var(--ink);border-radius:16px;padding:16px;color:var(--cream)}
+.summary-box-title{font-family:'Lora',serif;font-size:14px;font-style:italic;margin-bottom:8px;color:rgba(250,248,243,0.7)}
+.summary-box-text{font-size:13px;line-height:1.6;color:var(--cream)}
+.summary-box-btn{margin-top:12px;padding:8px 16px;background:rgba(250,248,243,0.1);border:0.5px solid rgba(250,248,243,0.2);border-radius:100px;font-size:12px;color:var(--cream);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.15s}
+.summary-box-btn:hover{background:rgba(250,248,243,0.2)}
+
+/* ── SCREEN: GESPRÄCHE ── */
+.search-bar{padding:12px 16px;position:sticky;top:0;background:var(--cream);z-index:5}
+.search-input{width:100%;padding:10px 16px 10px 40px;background:var(--white);border:0.5px solid var(--border);border-radius:12px;font-size:14px;font-family:'DM Sans',sans-serif;color:var(--ink);outline:none;transition:border-color 0.2s;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='none'%3E%3Ccircle cx='7' cy='7' r='5' stroke='%23B5B0A5' stroke-width='1.3'/%3E%3Cpath d='M11 11l3 3' stroke='%23B5B0A5' stroke-width='1.3' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:14px center}
+.search-input:focus{border-color:rgba(45,106,79,0.35)}
+.search-input::placeholder{color:var(--ink-faint)}
+
+.conv-list{padding:0 16px 16px;display:flex;flex-direction:column;gap:6px}
+.conv-item{background:var(--white);border:0.5px solid var(--border);border-radius:14px;padding:14px;display:flex;gap:12px;cursor:pointer;transition:all 0.15s;position:relative}
+.conv-item:hover{border-color:rgba(45,106,79,0.3)}
+.conv-item.unread{border-left:3px solid var(--green)}
+.conv-avatar{width:40px;height:40px;border-radius:50%;background:var(--green-pale);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:500;color:var(--green);flex-shrink:0;font-family:'Lora',serif}
+.conv-body{flex:1;min-width:0}
+.conv-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:3px}
+.conv-name{font-size:14px;font-weight:500;color:var(--ink)}
+.conv-time{font-size:11px;color:var(--ink-faint)}
+.conv-preview{font-size:12px;color:var(--ink-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.conv-preview.karen{color:var(--green)}
+.unread-dot{width:8px;height:8px;border-radius:50%;background:var(--green);position:absolute;top:16px;right:14px}
+
+/* ── CHAT DETAIL ── */
+.chat-detail{display:none;flex-direction:column;height:100%;background:var(--cream)}
+.chat-detail.open{display:flex}
+.chat-detail-header{padding:12px 16px;background:var(--white);border-bottom:0.5px solid var(--border);display:flex;align-items:center;gap:12px;flex-shrink:0}
+.back-btn{width:32px;height:32px;border-radius:50%;border:0.5px solid var(--border);background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all 0.15s}
+.back-btn:hover{background:var(--cream)}
+.chat-detail-info{flex:1}
+.chat-detail-name{font-size:15px;font-weight:500}
+.chat-detail-sub{font-size:11px;color:var(--ink-muted)}
+.chat-tag{font-size:10px;padding:3px 9px;border-radius:100px;font-weight:500}
+
+.chat-messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px}
+.chat-bubble-wrap{display:flex;flex-direction:column;max-width:80%}
+.chat-bubble-wrap.customer{align-self:flex-start}
+.chat-bubble-wrap.karen{align-self:flex-end}
+.chat-bubble{padding:10px 14px;border-radius:16px;font-size:14px;line-height:1.55}
+.chat-bubble-wrap.customer .chat-bubble{background:var(--white);border:0.5px solid var(--border);color:var(--ink);border-bottom-left-radius:4px}
+.chat-bubble-wrap.karen .chat-bubble{background:var(--green);color:#E8F5ED;border-bottom-right-radius:4px}
+.chat-bubble-time{font-size:10px;color:var(--ink-faint);margin-top:3px;padding:0 4px}
+.chat-bubble-wrap.karen .chat-bubble-time{text-align:right}
+.chat-sys-msg{align-self:center;font-size:11px;color:var(--ink-faint);padding:4px 12px;background:rgba(26,25,23,0.05);border-radius:100px}
+
+.chat-action-bar{padding:12px 16px;background:var(--white);border-top:0.5px solid var(--border);display:flex;gap:8px;flex-shrink:0}
+.chat-action-btn{flex:1;padding:10px;border-radius:10px;border:0.5px solid var(--border);background:transparent;font-size:12px;font-family:'DM Sans',sans-serif;color:var(--ink-soft);cursor:pointer;transition:all 0.15s;font-weight:500}
+.chat-action-btn:hover{background:var(--cream)}
+.chat-action-btn.primary{background:var(--green);color:white;border-color:var(--green)}
+.chat-action-btn.primary:hover{opacity:0.88}
+
+/* ── SCREEN: TERMINE ── */
+.cal-header{padding:16px 16px 8px;display:flex;align-items:center;justify-content:space-between}
+.cal-month{font-family:'Lora',serif;font-size:18px;font-weight:400}
+.cal-nav{display:flex;gap:6px}
+.cal-nav-btn{width:32px;height:32px;border-radius:50%;border:0.5px solid var(--border);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s}
+.cal-nav-btn:hover{background:var(--white)}
+
+.cal-week{display:grid;grid-template-columns:repeat(7,1fr);padding:0 16px 8px;gap:4px}
+.cal-day-label{font-size:10px;color:var(--ink-faint);text-align:center;padding:4px 0;font-weight:500}
+.cal-day{aspect-ratio:1;display:flex;align-items:center;justify-content:center;border-radius:8px;font-size:13px;cursor:pointer;transition:all 0.15s;position:relative;color:var(--ink-muted)}
+.cal-day:hover{background:var(--white)}
+.cal-day.today{background:var(--green);color:white;font-weight:500}
+.cal-day.has-events::after{content:'';position:absolute;bottom:3px;left:50%;transform:translateX(-50%);width:4px;height:4px;border-radius:50%;background:var(--green-mid)}
+.cal-day.today.has-events::after{background:rgba(255,255,255,0.6)}
+.cal-day.selected{background:var(--green-faint);color:var(--green);font-weight:500}
+.cal-day.other-month{opacity:0.3}
+
+.appt-list{padding:8px 16px 80px;display:flex;flex-direction:column;gap:8px}
+.appt-date-label{font-size:11px;font-weight:500;color:var(--ink-muted);letter-spacing:0.05em;text-transform:uppercase;padding:8px 0 4px}
+.appt-card{background:var(--white);border:0.5px solid var(--border);border-radius:14px;padding:14px;display:flex;gap:12px;cursor:pointer;transition:all 0.15s}
+.appt-card:hover{border-color:rgba(45,106,79,0.3)}
+.appt-time-col{display:flex;flex-direction:column;align-items:center;min-width:44px}
+.appt-time{font-size:13px;font-weight:500;color:var(--ink)}
+.appt-dur{font-size:10px;color:var(--ink-faint);margin-top:2px}
+.appt-line{width:1px;flex:1;background:var(--border-soft);margin:4px 0}
+.appt-body{flex:1}
+.appt-name{font-size:14px;font-weight:500;color:var(--ink);margin-bottom:2px}
+.appt-service{font-size:12px;color:var(--ink-muted)}
+.appt-addr{font-size:11px;color:var(--ink-faint);margin-top:3px}
+.appt-status{font-size:10px;padding:2px 8px;border-radius:100px;margin-top:6px;display:inline-block;font-weight:500}
+.status-confirmed{background:var(--green-pale);color:var(--green)}
+.status-pending{background:var(--amber-pale);color:var(--amber)}
+
+/* ── SCREEN: EINSTELLUNGEN ── */
+.settings-list{padding:16px;display:flex;flex-direction:column;gap:8px}
+.settings-section-title{font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink-faint);font-weight:500;padding:8px 0 4px}
+.settings-item{background:var(--white);border:0.5px solid var(--border);border-radius:14px;padding:14px 16px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:all 0.15s}
+.settings-item:hover{border-color:rgba(45,106,79,0.3)}
+.settings-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.settings-text{flex:1}
+.settings-name{font-size:14px;font-weight:500;color:var(--ink)}
+.settings-desc{font-size:12px;color:var(--ink-muted);margin-top:1px}
+.settings-arrow{color:var(--ink-faint)}
+.settings-toggle{width:44px;height:26px;border-radius:13px;background:var(--green);border:none;cursor:pointer;position:relative;transition:background 0.2s;flex-shrink:0}
+.settings-toggle::after{content:'';position:absolute;top:3px;right:3px;width:20px;height:20px;border-radius:50%;background:white;transition:transform 0.2s}
+.settings-toggle.off{background:var(--border)}
+.settings-toggle.off::after{transform:translateX(-18px)}
+
+.karen-status-card{margin:0 16px 8px;background:var(--ink);border-radius:16px;padding:16px;display:flex;align-items:center;gap:14px}
+.karen-status-avatar{width:48px;height:48px;border-radius:50%;background:var(--green-pale);display:flex;align-items:center;justify-content:center;font-family:'Lora',serif;font-size:18px;color:var(--green);flex-shrink:0}
+.karen-status-info{flex:1}
+.karen-status-name{font-family:'Lora',serif;font-size:16px;color:var(--cream)}
+.karen-status-sub{font-size:12px;color:rgba(250,248,243,0.5);margin-top:2px}
+.karen-status-badge{padding:4px 12px;background:rgba(82,183,136,0.2);border-radius:100px;font-size:11px;color:var(--green-mid);font-weight:500}
+
+/* ── MODAL OVERLAY ── */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(26,25,23,0.5);z-index:100;align-items:flex-end;backdrop-filter:blur(4px)}
+.modal-overlay.open{display:flex}
+.modal-sheet{background:var(--white);border-radius:20px 20px 0 0;padding:20px;width:100%;max-height:80vh;overflow-y:auto;animation:slide-up 0.3s ease-out}
+@keyframes slide-up{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.modal-handle{width:36px;height:4px;border-radius:2px;background:var(--border);margin:0 auto 20px}
+.modal-title{font-family:'Lora',serif;font-size:20px;font-weight:400;margin-bottom:4px}
+.modal-sub{font-size:13px;color:var(--ink-muted);margin-bottom:20px}
+.modal-actions{display:flex;flex-direction:column;gap:8px;margin-top:16px}
+.modal-btn{padding:14px;border-radius:12px;font-size:15px;font-family:'DM Sans',sans-serif;font-weight:500;cursor:pointer;transition:all 0.2s;border:none;text-align:center}
+.modal-btn.primary{background:var(--green);color:white}
+.modal-btn.secondary{background:var(--cream);color:var(--ink)}
+.modal-btn.danger{background:var(--red-pale);color:var(--red)}
+.modal-btn:hover{opacity:0.85}
+
+/* ── EMPTY STATE ── */
+.empty-state{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem;text-align:center;gap:12px}
+.empty-icon{width:56px;height:56px;border-radius:16px;background:var(--green-faint);display:flex;align-items:center;justify-content:center}
+.empty-title{font-family:'Lora',serif;font-size:18px;font-weight:400}
+.empty-sub{font-size:13px;color:var(--ink-muted);line-height:1.6;max-width:260px}
+
+/* ── FAB ── */
+.fab{position:fixed;bottom:80px;right:16px;width:52px;height:52px;border-radius:50%;background:var(--green);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(45,106,79,0.35);transition:all 0.2s;z-index:10}
+.fab:hover{transform:scale(1.08);background:var(--ink)}
+.fab:active{transform:scale(0.96)}
+
+@keyframes fade-in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.screen.active > *{animation:fade-in 0.3s ease-out both}
+</style>
+</head>
+<body>
+
+<!-- TOP NAV -->
+<div class="topnav">
+  <div class="logo">Karen<span>.</span></div>
+  <div class="nav-biz">
+    <div class="biz-pill">
+      <div class="biz-dot"></div>
+      <span id="bizPillName">Sanitär Meier</span>
+    </div>
+  </div>
+  <div class="nav-right">
+    <button class="icon-btn" onclick="openModal('notif')">
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M9 2a5 5 0 0 1 5 5v3l1.5 2.5H2.5L4 10V7a5 5 0 0 1 5-5z" stroke="currentColor" stroke-width="1.3"/><path d="M7.5 15a1.5 1.5 0 0 0 3 0" stroke="currentColor" stroke-width="1.3"/></svg>
+      <div class="notif-badge"></div>
+    </button>
+  </div>
+</div>
+
+<!-- TAB BAR -->
+<div class="tabbar">
+  <button class="tab active" onclick="showScreen('home',this)">
+    <div class="tab-icon">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 8.5L10 3l7 5.5V17H13v-4H7v4H3V8.5z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>
+    </div>
+    <span class="tab-label">Heute</span>
+    <div class="tab-bar-indicator"></div>
+  </button>
+  <button class="tab" onclick="showScreen('conversations',this)">
+    <div class="tab-icon">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2H7l-4 3V5z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>
+    </div>
+    <span class="tab-label">Gespräche</span>
+    <div class="tab-bar-indicator"></div>
+  </button>
+  <button class="tab" onclick="showScreen('calendar',this)">
+    <div class="tab-icon">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="3" y="4" width="14" height="13" rx="2" stroke="currentColor" stroke-width="1.3"/><path d="M3 8h14M7 2v2M13 2v2" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+    </div>
+    <span class="tab-label">Termine</span>
+    <div class="tab-bar-indicator"></div>
+  </button>
+  <button class="tab" onclick="showScreen('settings',this)">
+    <div class="tab-icon">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="2.5" stroke="currentColor" stroke-width="1.3"/><path d="M10 3v2M10 15v2M3 10h2M15 10h2M5.05 5.05l1.41 1.41M13.54 13.54l1.41 1.41M5.05 14.95l1.41-1.41M13.54 6.46l1.41-1.41" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+    </div>
+    <span class="tab-label">Einstellungen</span>
+    <div class="tab-bar-indicator"></div>
+  </button>
+</div>
+
+<!-- ══ SCREEN: HEUTE ══ -->
+<div class="screen active" id="screen-home">
+  <div class="home-header">
+    <div class="home-greeting">Guten Morgen, <em>Thomas.</em></div>
+    <div class="home-sub">Heute, 13. April · Karen war aktiv</div>
+  </div>
+
+  <div class="stat-row">
+    <div class="stat-card">
+      <div class="stat-num green">4</div>
+      <div class="stat-label">Neue Nachrichten</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num">3</div>
+      <div class="stat-label">Termine heute</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num amber">1</div>
+      <div class="stat-label">Wartet auf Sie</div>
+    </div>
+  </div>
+
+  <div class="summary-box">
+    <div class="summary-box-title">Karens Zusammenfassung</div>
+    <div class="summary-box-text" id="aiSummaryText">Heute hat Karen 4 Anfragen beantwortet. Frau Schulz möchte Donnerstag einen Termin — ich brauche Ihre Bestätigung. Zwei Preisfragen wurden direkt beantwortet. Alles läuft.</div>
+    <button class="summary-box-btn" onclick="generateSummary()">Neue Zusammenfassung ↻</button>
+  </div>
+
+  <div class="section-head">
+    <span class="section-title">Letzte Aktivitäten</span>
+    <span class="section-link" onclick="showScreen('conversations', document.querySelectorAll('.tab')[1])">Alle</span>
+  </div>
+
+  <div class="activity-list">
+    <div class="activity-item" onclick="openConv('schulz')">
+      <div class="activity-icon booking">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="3" width="12" height="11" rx="1.5" stroke="#2D6A4F" stroke-width="1.2"/><path d="M2 6.5h12M5.5 1.5v2M10.5 1.5v2" stroke="#2D6A4F" stroke-width="1.2" stroke-linecap="round"/></svg>
+      </div>
+      <div class="activity-body">
+        <div class="activity-top">
+          <span class="activity-name">Monika Schulz</span>
+          <span class="activity-time">14:32</span>
+        </div>
+        <div class="activity-text">Möchte Termin für undichten Wasserhahn — Donnerstag nachmittag</div>
+        <span class="activity-badge badge-booking">Termin ausstehend</span>
+      </div>
+    </div>
+    <div class="activity-item" onclick="openConv('fischer')">
+      <div class="activity-icon question">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="#185FA5" stroke-width="1.2"/><path d="M8 11v-1M8 5a2 2 0 0 1 0 4" stroke="#185FA5" stroke-width="1.2" stroke-linecap="round"/></svg>
+      </div>
+      <div class="activity-body">
+        <div class="activity-top">
+          <span class="activity-name">Klaus Fischer</span>
+          <span class="activity-time">13:15</span>
+        </div>
+        <div class="activity-text">Preisfrage Heizungswartung — Karen hat geantwortet</div>
+        <span class="activity-badge badge-question">Beantwortet</span>
+      </div>
+    </div>
+    <div class="activity-item" onclick="openConv('wagner')">
+      <div class="activity-icon emergency">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2L14 13H2L8 2z" stroke="#A32D2D" stroke-width="1.2" stroke-linejoin="round"/><path d="M8 6v4M8 11.5v.5" stroke="#A32D2D" stroke-width="1.3" stroke-linecap="round"/></svg>
+      </div>
+      <div class="activity-body">
+        <div class="activity-top">
+          <span class="activity-name">Petra Wagner</span>
+          <span class="activity-time">10:04</span>
+        </div>
+        <div class="activity-text">Notfall: Rohrbruch — Karen hat sofort Ihre Nummer weitergeleitet</div>
+        <span class="activity-badge badge-emergency">Weitergleitet</span>
+      </div>
+    </div>
+    <div class="activity-item" onclick="openConv('mueller')">
+      <div class="activity-icon booking">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="3" width="12" height="11" rx="1.5" stroke="#2D6A4F" stroke-width="1.2"/><path d="M2 6.5h12M5.5 1.5v2M10.5 1.5v2" stroke="#2D6A4F" stroke-width="1.2" stroke-linecap="round"/></svg>
+      </div>
+      <div class="activity-body">
+        <div class="activity-top">
+          <span class="activity-name">Hans Müller</span>
+          <span class="activity-time">09:22</span>
+        </div>
+        <div class="activity-text">Termin Montag 10 Uhr gebucht — Badezimmer Umbau Beratung</div>
+        <span class="activity-badge badge-booking">Termin bestätigt</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SCREEN: GESPRÄCHE ══ -->
+<div class="screen" id="screen-conversations">
+  <div id="conv-list-view" style="display:flex;flex-direction:column;flex:1">
+    <div class="search-bar">
+      <input class="search-input" placeholder="Gespräch suchen..." oninput="filterConvs(this.value)">
+    </div>
+    <div class="conv-list" id="convList">
+      <div class="conv-item unread" onclick="openConv('schulz')">
+        <div class="conv-avatar">MS</div>
+        <div class="conv-body">
+          <div class="conv-top"><span class="conv-name">Monika Schulz</span><span class="conv-time">14:32</span></div>
+          <div class="conv-preview karen">Karen: Donnerstag 15 Uhr wäre noch frei...</div>
+        </div>
+        <div class="unread-dot"></div>
+      </div>
+      <div class="conv-item" onclick="openConv('fischer')">
+        <div class="conv-avatar">KF</div>
+        <div class="conv-body">
+          <div class="conv-top"><span class="conv-name">Klaus Fischer</span><span class="conv-time">13:15</span></div>
+          <div class="conv-preview">Was kostet eine Heizungswartung?</div>
+        </div>
+      </div>
+      <div class="conv-item" onclick="openConv('wagner')">
+        <div class="conv-avatar">PW</div>
+        <div class="conv-body">
+          <div class="conv-top"><span class="conv-name">Petra Wagner</span><span class="conv-time">10:04</span></div>
+          <div class="conv-preview karen">Karen: Bitte rufen Sie sofort +49 151...</div>
+        </div>
+      </div>
+      <div class="conv-item" onclick="openConv('mueller')">
+        <div class="conv-avatar">HM</div>
+        <div class="conv-body">
+          <div class="conv-top"><span class="conv-name">Hans Müller</span><span class="conv-time">09:22</span></div>
+          <div class="conv-preview karen">Karen: Montag 10 Uhr ist eingetragen.</div>
+        </div>
+      </div>
+      <div class="conv-item" onclick="openConv('becker')">
+        <div class="conv-avatar">SB</div>
+        <div class="conv-body">
+          <div class="conv-top"><span class="conv-name">Sandra Becker</span><span class="conv-time">Gestern</span></div>
+          <div class="conv-preview">Habt ihr am Samstag geöffnet?</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CHAT DETAIL -->
+  <div class="chat-detail" id="chatDetail">
+    <div class="chat-detail-header">
+      <button class="back-btn" onclick="closeConv()">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 2L4 7l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div class="chat-detail-info">
+        <div class="chat-detail-name" id="detailName">Monika Schulz</div>
+        <div class="chat-detail-sub" id="detailSub">Heute · WhatsApp</div>
+      </div>
+      <span class="chat-tag badge-booking" id="detailTag">Termin</span>
+    </div>
+    <div class="chat-messages" id="detailMessages"></div>
+    <div class="chat-action-bar">
+      <button class="chat-action-btn" onclick="openModal('note')">Notiz hinzufügen</button>
+      <button class="chat-action-btn primary" onclick="openModal('confirm')">Termin bestätigen</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SCREEN: TERMINE ══ -->
+<div class="screen" id="screen-calendar">
+  <div class="cal-header">
+    <div class="cal-month" id="calMonth">April 2025</div>
+    <div class="cal-nav">
+      <button class="cal-nav-btn" onclick="changeMonth(-1)"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M8 2L4 6l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      <button class="cal-nav-btn" onclick="changeMonth(1)"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M4 2l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    </div>
+  </div>
+  <div id="calGrid"></div>
+  <div class="appt-list" id="apptList"></div>
+</div>
+
+<!-- ══ SCREEN: EINSTELLUNGEN ══ -->
+<div class="screen" id="screen-settings">
+  <div class="settings-list">
+    <div class="karen-status-card">
+      <div class="karen-status-avatar">K</div>
+      <div class="karen-status-info">
+        <div class="karen-status-name">Karen ist aktiv</div>
+        <div class="karen-status-sub">Sanitär Meier · seit 3 Tagen</div>
+      </div>
+      <div class="karen-status-badge">Online</div>
+    </div>
+
+    <div class="settings-section-title">Karen anpassen</div>
+
+    <div class="settings-item" onclick="openModal('edit-biz')">
+      <div class="settings-icon" style="background:var(--green-faint)"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="2" y="2" width="14" height="14" rx="2" stroke="#2D6A4F" stroke-width="1.3"/><path d="M6 9h6M9 6v6" stroke="#2D6A4F" stroke-width="1.3" stroke-linecap="round"/></svg></div>
+      <div class="settings-text"><div class="settings-name">Betriebsdaten</div><div class="settings-desc">Name, Leistungen, Preise, Öffnungszeiten</div></div>
+      <svg class="settings-arrow" width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M5 2l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+
+    <div class="settings-item" onclick="openModal('edit-tone')">
+      <div class="settings-icon" style="background:var(--blue-pale)"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M3 5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H7l-4 3V5z" stroke="#185FA5" stroke-width="1.3" stroke-linejoin="round"/></svg></div>
+      <div class="settings-text"><div class="settings-name">Karens Sprache & Ton</div><div class="settings-desc">Warm & persönlich</div></div>
+      <svg class="settings-arrow" width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M5 2l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+
+    <div class="settings-item" onclick="openModal('edit-emergency')">
+      <div class="settings-icon" style="background:var(--red-pale)"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M9 2L15.5 14H2.5L9 2z" stroke="#A32D2D" stroke-width="1.3" stroke-linejoin="round"/><path d="M9 7v4" stroke="#A32D2D" stroke-width="1.5" stroke-linecap="round"/><circle cx="9" cy="12.5" r=".75" fill="#A32D2D"/></svg></div>
+      <div class="settings-text"><div class="settings-name">Notfall-Weiterleitung</div><div class="settings-desc">+49 151 ••• ••• ••</div></div>
+      <svg class="settings-arrow" width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M5 2l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+
+    <div class="settings-section-title">Benachrichtigungen</div>
+
+    <div class="settings-item">
+      <div class="settings-icon" style="background:var(--amber-pale)"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M9 2a5 5 0 0 1 5 5v3l1.5 2.5H2.5L4 10V7a5 5 0 0 1 5-5z" stroke="#9A6B1F" stroke-width="1.3"/><path d="M7.5 15a1.5 1.5 0 0 0 3 0" stroke="#9A6B1F" stroke-width="1.3"/></svg></div>
+      <div class="settings-text"><div class="settings-name">Push-Benachrichtigungen</div><div class="settings-desc">Bei neuen Gesprächen</div></div>
+      <button class="settings-toggle" onclick="this.classList.toggle('off')"></button>
+    </div>
+
+    <div class="settings-item">
+      <div class="settings-icon" style="background:var(--green-faint)"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="3" y="4" width="12" height="10" rx="1.5" stroke="#2D6A4F" stroke-width="1.3"/><path d="M3 7l6 4 6-4" stroke="#2D6A4F" stroke-width="1.3"/></svg></div>
+      <div class="settings-text"><div class="settings-name">Tägliche Zusammenfassung</div><div class="settings-desc">Jeden Morgen per WhatsApp</div></div>
+      <button class="settings-toggle" onclick="this.classList.toggle('off')"></button>
+    </div>
+
+    <div class="settings-section-title">Konto</div>
+
+    <div class="settings-item" onclick="openModal('plan')">
+      <div class="settings-icon" style="background:var(--amber-pale)"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M9 2l2 4.5 5 .7-3.5 3.5.8 5L9 13.4l-4.3 2.3.8-5L2 7.2l5-.7L9 2z" stroke="#9A6B1F" stroke-width="1.3" stroke-linejoin="round"/></svg></div>
+      <div class="settings-text"><div class="settings-name">Mein Plan</div><div class="settings-desc">Karen Pro · 149€/Monat</div></div>
+      <svg class="settings-arrow" width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M5 2l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+
+    <div class="settings-item" onclick="openModal('logout')">
+      <div class="settings-icon" style="background:var(--red-pale)"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M7 3H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h3M12 12l3-3-3-3M15 9H7" stroke="#A32D2D" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="settings-text"><div class="settings-name">Abmelden</div><div class="settings-desc">Von diesem Gerät</div></div>
+      <svg class="settings-arrow" width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M5 2l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+  </div>
+</div>
+
+<!-- FAB -->
+<button class="fab" onclick="openModal('new-conv')" title="Neues Gespräch starten">
+  <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M11 5v12M5 11h12" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
+</button>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+  <div class="modal-sheet" id="modalSheet">
+    <div class="modal-handle"></div>
+    <div id="modalContent"></div>
+  </div>
+</div>
+
+<script>
+// ── SCREEN NAV ──
+function showScreen(name, tabEl) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('screen-' + name).classList.add('active');
+  if (tabEl) tabEl.classList.add('active');
+  if (name === 'calendar') renderCalendar();
+}
+
+// ── CONVERSATIONS ──
+const convData = {
+  schulz: {
+    name: 'Monika Schulz', sub: 'Heute · WhatsApp', tag: 'Termin ausstehend', tagClass: 'badge-booking',
+    messages: [
+      { role: 'customer', text: 'Hallo, ich wollte mal fragen ob Sie nächste Woche Zeit hätten für einen undichten Wasserhahn?', time: '14:28' },
+      { role: 'karen', text: 'Hallo Frau Schulz! Natürlich, gerne. Wann passt es Ihnen — Donnerstag oder Freitag wäre noch frei. Eher vor- oder nachmittags?', time: '14:28' },
+      { role: 'customer', text: 'Donnerstag nachmittag wäre super, so ab 15 Uhr?', time: '14:30' },
+      { role: 'karen', text: 'Donnerstag 15 Uhr wäre noch frei. Darf ich kurz Ihre Adresse notieren, damit Herr Meier direkt zu Ihnen kommen kann?', time: '14:31' },
+      { role: 'customer', text: 'Musterstraße 12, 59320 Ennigerloh', time: '14:32' },
+    ]
+  },
+  fischer: {
+    name: 'Klaus Fischer', sub: 'Heute · WhatsApp', tag: 'Beantwortet', tagClass: 'badge-question',
+    messages: [
+      { role: 'customer', text: 'Was kostet bei Ihnen eine Heizungswartung?', time: '13:12' },
+      { role: 'karen', text: 'Guten Tag Herr Fischer! Eine Heizungswartung berechnen wir ab 85€/h. Für einen genauen Preis kommt Herr Meier gerne kurz vorbei — das ist kostenlos. Soll ich einen Termin vormerken?', time: '13:13' },
+      { role: 'customer', text: 'Nein danke, ich melde mich wenn es soweit ist', time: '13:15' },
+      { role: 'karen', text: 'Sehr gut, dann freuen wir uns auf Ihre Nachricht. Einen schönen Tag noch!', time: '13:15' },
+    ]
+  },
+  wagner: {
+    name: 'Petra Wagner', sub: 'Heute · Anruf', tag: 'Notfall', tagClass: 'badge-emergency',
+    messages: [
+      { role: 'customer', text: 'Hilfe ich habe einen Rohrbruch im Keller alles läuft voll!!!', time: '10:03' },
+      { role: 'karen', text: 'Frau Wagner, bitte rufen Sie sofort Herrn Meier an: +49 151 00000000 — er ist für Notfälle jederzeit erreichbar. Drehen Sie in der Zwischenzeit den Haupthahn zu, falls möglich.', time: '10:03' },
+    ]
+  },
+  mueller: {
+    name: 'Hans Müller', sub: 'Heute · WhatsApp', tag: 'Bestätigt', tagClass: 'badge-booking',
+    messages: [
+      { role: 'customer', text: 'Guten Morgen, ich würde gerne mein Badezimmer renovieren lassen. Können wir mal einen Beratungstermin machen?', time: '09:18' },
+      { role: 'karen', text: 'Guten Morgen Herr Müller! Sehr gerne. Kommende Woche hat Herr Meier Montag 10 Uhr oder Mittwoch 14 Uhr frei. Was passt Ihnen besser?', time: '09:19' },
+      { role: 'customer', text: 'Montag 10 Uhr passt perfekt', time: '09:21' },
+      { role: 'karen', text: 'Montag 10 Uhr ist eingetragen. Herr Meier freut sich auf das Gespräch. Darf ich noch Ihre Adresse notieren?', time: '09:22' },
+      { role: 'customer', text: 'Lindenweg 5, Ennigerloh', time: '09:22' },
+    ]
+  },
+  becker: {
+    name: 'Sandra Becker', sub: 'Gestern · WhatsApp', tag: 'Beantwortet', tagClass: 'badge-question',
+    messages: [
+      { role: 'customer', text: 'Habt ihr am Samstag geöffnet?', time: 'Gestern 16:44' },
+      { role: 'karen', text: 'Ja, samstags sind wir von 8 bis 13 Uhr erreichbar. Kann ich Ihnen noch bei etwas helfen?', time: 'Gestern 16:44' },
+      { role: 'customer', text: 'Super danke!', time: 'Gestern 16:45' },
+    ]
+  }
+};
+
+function openConv(id) {
+  const data = convData[id];
+  if (!data) return;
+  document.getElementById('detailName').textContent = data.name;
+  document.getElementById('detailSub').textContent = data.sub;
+  const tag = document.getElementById('detailTag');
+  tag.textContent = data.tag;
+  tag.className = 'chat-tag ' + data.tagClass;
+
+  const msgs = document.getElementById('detailMessages');
+  msgs.innerHTML = '<div class="chat-sys-msg">Gespräch mit Karen</div>';
+  data.messages.forEach(m => {
+    const wrap = document.createElement('div');
+    wrap.className = 'chat-bubble-wrap ' + (m.role === 'karen' ? 'karen' : 'customer');
+    wrap.innerHTML = `<div class="chat-bubble">${m.text}</div><div class="chat-bubble-time">${m.role === 'karen' ? 'Karen · ' : ''}${m.time}</div>`;
+    msgs.appendChild(wrap);
+  });
+  setTimeout(() => { msgs.scrollTop = msgs.scrollHeight; }, 50);
+
+  document.getElementById('conv-list-view').style.display = 'none';
+  document.getElementById('chatDetail').classList.add('open');
+
+  const actionBar = document.querySelector('.chat-action-bar');
+  if (data.tagClass === 'badge-booking' && data.tag === 'Termin ausstehend') {
+    actionBar.style.display = 'flex';
+  } else {
+    actionBar.style.display = 'none';
+  }
+}
+
+function closeConv() {
+  document.getElementById('conv-list-view').style.display = 'flex';
+  document.getElementById('chatDetail').classList.remove('open');
+}
+
+function filterConvs(val) {
+  document.querySelectorAll('.conv-item').forEach(item => {
+    const name = item.querySelector('.conv-name').textContent.toLowerCase();
+    item.style.display = name.includes(val.toLowerCase()) ? '' : 'none';
+  });
+}
+
+// ── CALENDAR ──
+let calDate = new Date(2025, 3, 13);
+const appointments = [
+  { date: '2025-04-13', time: '10:00', dur: '1h', name: 'Hans Müller', service: 'Badezimmer Beratung', addr: 'Lindenweg 5', status: 'confirmed' },
+  { date: '2025-04-13', time: '14:00', dur: '2h', name: 'Karl Brandt', service: 'Heizung Wartung', addr: 'Hauptstr. 22', status: 'confirmed' },
+  { date: '2025-04-13', time: '17:00', dur: '1.5h', name: 'Ursula Klein', service: 'Wasserhahn tauschen', addr: 'Am Markt 8', status: 'confirmed' },
+  { date: '2025-04-17', time: '15:00', dur: '1h', name: 'Monika Schulz', service: 'Undichter Wasserhahn', addr: 'Musterstr. 12', status: 'pending' },
+  { date: '2025-04-15', time: '09:00', dur: '3h', name: 'Familie Richter', service: 'Badinstallation', addr: 'Schulweg 3', status: 'confirmed' },
+];
+
+function renderCalendar() {
+  const year = calDate.getFullYear(), month = calDate.getMonth();
+  const months = ['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
+  document.getElementById('calMonth').textContent = `${months[month]} ${year}`;
+
+  const daysEl = document.getElementById('calGrid');
+  const days = ['Mo','Di','Mi','Do','Fr','Sa','So'];
+  let html = `<div class="cal-week">${days.map(d => `<div class="cal-day-label">${d}</div>`).join('')}`;
+
+  const firstDay = new Date(year, month, 1);
+  let startDow = firstDay.getDay() - 1; if (startDow < 0) startDow = 6;
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const daysInPrev = new Date(year, month, 0).getDate();
+  const today = new Date();
+
+  const apptDates = new Set(appointments.map(a => a.date));
+
+  let cells = '';
+  for (let i = 0; i < startDow; i++) {
+    const d = daysInPrev - startDow + 1 + i;
+    cells += `<div class="cal-day other-month">${d}</div>`;
+  }
+  for (let d = 1; d <= daysInMonth; d++) {
+    const dateStr = `${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const isToday = today.getFullYear() === year && today.getMonth() === month && today.getDate() === d;
+    const hasEv = apptDates.has(dateStr);
+    cells += `<div class="cal-day${isToday?' today':''}${hasEv?' has-events':''}" onclick="selectDay('${dateStr}')">${d}</div>`;
+  }
+  const remaining = 42 - startDow - daysInMonth;
+  for (let d = 1; d <= remaining; d++) {
+    cells += `<div class="cal-day other-month">${d}</div>`;
+  }
+
+  daysEl.innerHTML = `<div class="cal-week">${days.map(d=>`<div class="cal-day-label">${d}</div>`).join('')}${cells}</div>`;
+  renderAppointments();
+}
+
+function selectDay(dateStr) {
+  document.querySelectorAll('.cal-day').forEach(d => d.classList.remove('selected'));
+  renderAppointments(dateStr);
+}
+
+function renderAppointments(filterDate) {
+  const list = document.getElementById('apptList');
+  const toShow = filterDate
+    ? appointments.filter(a => a.date === filterDate)
+    : appointments.filter(a => a.date >= '2025-04-13').sort((a,b) => a.date.localeCompare(b.date));
+
+  if (!toShow.length) {
+    list.innerHTML = '<div class="empty-state"><div class="empty-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="17" rx="2" stroke="#2D6A4F" stroke-width="1.5"/><path d="M3 9h18M8 2v2M16 2v2" stroke="#2D6A4F" stroke-width="1.5" stroke-linecap="round"/></svg></div><div class="empty-title">Keine Termine</div><div class="empty-sub">An diesem Tag hat Karen noch nichts gebucht.</div></div>';
+    return;
+  }
+
+  const grouped = {};
+  toShow.forEach(a => { if (!grouped[a.date]) grouped[a.date] = []; grouped[a.date].push(a); });
+
+  const dateLabels = { '2025-04-13': 'Heute, 13. April', '2025-04-15': 'Dienstag, 15. April', '2025-04-17': 'Donnerstag, 17. April' };
+  list.innerHTML = Object.entries(grouped).map(([date, appts]) => `
+    <div class="appt-date-label">${dateLabels[date] || date}</div>
+    ${appts.map(a => `
+      <div class="appt-card">
+        <div class="appt-time-col">
+          <div class="appt-time">${a.time}</div>
+          <div class="appt-dur">${a.dur}</div>
+          <div class="appt-line"></div>
+        </div>
+        <div class="appt-body">
+          <div class="appt-name">${a.name}</div>
+          <div class="appt-service">${a.service}</div>
+          <div class="appt-addr">${a.addr}</div>
+          <span class="appt-status ${a.status === 'confirmed' ? 'status-confirmed' : 'status-pending'}">${a.status === 'confirmed' ? 'Bestätigt' : 'Ausstehend'}</span>
+        </div>
+      </div>`).join('')}
+  `).join('');
+}
+
+function changeMonth(dir) {
+  calDate.setMonth(calDate.getMonth() + dir);
+  renderCalendar();
+}
+
+// ── MODALS ──
+const modalContents = {
+  confirm: `<div class="modal-title">Termin bestätigen</div><div class="modal-sub">Monika Schulz · Donnerstag 15 Uhr · Musterstr. 12</div><div style="background:var(--green-faint);border-radius:12px;padding:14px;font-size:13px;color:var(--green);line-height:1.6">Karen schickt automatisch eine Bestätigung an Frau Schulz sobald Sie bestätigen.</div><div class="modal-actions"><button class="modal-btn primary" onclick="confirmAppt()">Termin bestätigen</button><button class="modal-btn secondary" onclick="closeModal()">Abbrechen</button></div>`,
+  note: `<div class="modal-title">Notiz hinzufügen</div><div class="modal-sub">Diese Notiz sieht nur Ihr Team.</div><textarea style="width:100%;padding:12px;background:var(--cream);border:0.5px solid var(--border);border-radius:12px;font-size:14px;font-family:'DM Sans',sans-serif;color:var(--ink);resize:none;outline:none;margin-bottom:16px" rows="4" placeholder="z.B. Kunde bevorzugt Vormittags..."></textarea><div class="modal-actions"><button class="modal-btn primary" onclick="closeModal()">Notiz speichern</button></div>`,
+  notif: `<div class="modal-title">Benachrichtigungen</div><div class="modal-sub">Was ist passiert?</div><div style="display:flex;flex-direction:column;gap:8px"><div style="padding:12px 14px;background:var(--amber-pale);border-radius:12px;font-size:13px;color:var(--amber)">Monika Schulz wartet auf Terminbestätigung</div><div style="padding:12px 14px;background:var(--green-faint);border-radius:12px;font-size:13px;color:var(--green)">Karen hat heute 4 Gespräche geführt</div></div><div class="modal-actions" style="margin-top:12px"><button class="modal-btn secondary" onclick="closeModal()">Schließen</button></div>`,
+  'new-conv': `<div class="modal-title">Neue Nachricht</div><div class="modal-sub">Karen schreibt im Namen Ihres Betriebs.</div><div style="display:flex;flex-direction:column;gap:10px;margin-bottom:16px"><input type="tel" placeholder="Handynummer des Kunden" style="width:100%;padding:12px 16px;background:var(--cream);border:0.5px solid var(--border);border-radius:12px;font-size:14px;font-family:'DM Sans',sans-serif;color:var(--ink);outline:none"><textarea rows="3" placeholder="Nachricht..." style="width:100%;padding:12px 16px;background:var(--cream);border:0.5px solid var(--border);border-radius:12px;font-size:14px;font-family:'DM Sans',sans-serif;color:var(--ink);resize:none;outline:none"></textarea></div><div class="modal-actions"><button class="modal-btn primary" onclick="closeModal()">Senden</button><button class="modal-btn secondary" onclick="closeModal()">Abbrechen</button></div>`,
+  logout: `<div class="modal-title">Abmelden?</div><div class="modal-sub">Karen bleibt aktiv — Sie können sich jederzeit wieder anmelden.</div><div class="modal-actions"><button class="modal-btn danger" onclick="closeModal()">Abmelden</button><button class="modal-btn secondary" onclick="closeModal()">Abbrechen</button></div>`,
+  plan: `<div class="modal-title">Ihr Plan</div><div class="modal-sub">Karen Pro · aktiv</div><div style="background:var(--ink);border-radius:14px;padding:16px;color:var(--cream);margin-bottom:16px"><div style="font-size:28px;font-weight:500;margin-bottom:4px">149€<span style="font-size:14px;opacity:0.5">/Monat</span></div><div style="font-size:13px;opacity:0.6">Nächste Abrechnung: 13. Mai 2025</div></div><div class="modal-actions"><button class="modal-btn secondary" onclick="closeModal()">Schließen</button></div>`,
+};
+
+function openModal(type) {
+  document.getElementById('modalContent').innerHTML = modalContents[type] || '<div class="modal-title">Kommt bald</div><div class="modal-sub">Diese Funktion wird gerade gebaut.</div><div class="modal-actions"><button class="modal-btn secondary" onclick="closeModal()">Schließen</button></div>';
+  document.getElementById('modalOverlay').classList.add('open');
+}
+
+function closeModal(e) {
+  if (!e || e.target === document.getElementById('modalOverlay')) {
+    document.getElementById('modalOverlay').classList.remove('open');
+  }
+}
+
+function confirmAppt() {
+  closeModal();
+  setTimeout(() => {
+    document.querySelector('.stat-card:nth-child(3) .stat-num').textContent = '0';
+    alert('Termin bestätigt. Karen schickt jetzt eine Bestätigung an Frau Schulz.');
+  }, 300);
+}
+
+// ── AI SUMMARY ──
+async function generateSummary() {
+  const el = document.getElementById('aiSummaryText');
+  el.textContent = 'Wird generiert...';
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        system: 'Du bist Karen, KI-Assistentin für Sanitär Meier. Schreib eine kurze tägliche Zusammenfassung für den Inhaber Thomas Meier. Max 3 Sätze. Kein Markdown. Wie eine WhatsApp-Nachricht.',
+        messages: [{ role: 'user', content: 'Heute: 4 Kundengespräche. Monika Schulz wartet auf Terminbestätigung für Donnerstag 15 Uhr. Klaus Fischer hatte Preisfrage Heizung. Petra Wagner Notfall Rohrbruch weitergeleitet. Hans Müller Termin Montag 10 Uhr bestätigt.' }]
+      })
+    });
+    const data = await res.json();
+    el.textContent = data.content?.[0]?.text || 'Zusammenfassung konnte nicht geladen werden.';
+  } catch(e) {
+    el.textContent = 'Heute hat Karen 4 Gespräche geführt. Ein Termin wartet auf Ihre Bestätigung. Alles weitere läuft.';
+  }
+}
+
+renderCalendar();
+</script>
+</body>
+</html>

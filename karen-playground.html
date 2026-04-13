@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Karen Brain — Test Playground</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=Lora:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:#FAF8F3;color:#1C1A17;display:flex;height:100vh;overflow:hidden}
+
+.sidebar{width:280px;flex-shrink:0;background:#FFFEF9;border-right:0.5px solid rgba(28,26,23,0.1);display:flex;flex-direction:column;overflow:hidden}
+.sidebar-header{padding:20px;border-bottom:0.5px solid rgba(28,26,23,0.07)}
+.sidebar-logo{font-family:'Lora',serif;font-size:18px;color:#1C1A17}
+.sidebar-logo span{color:#2D6A4F}
+.sidebar-sub{font-size:11px;color:#7A766D;margin-top:2px}
+
+.business-card{margin:12px;background:#F0FAF2;border:0.5px solid rgba(45,106,79,0.15);border-radius:12px;padding:14px}
+.biz-name{font-size:13px;font-weight:500;color:#1C1A17}
+.biz-type{font-size:11px;color:#2D6A4F;margin-top:2px}
+.biz-status{display:flex;align-items:center;gap:5px;font-size:11px;color:#52B788;margin-top:8px}
+.biz-dot{width:5px;height:5px;border-radius:50%;background:#52B788;animation:blink 2s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+
+.stats{padding:12px;display:flex;flex-direction:column;gap:8px}
+.stat-item{display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:#FFFEF9;border:0.5px solid rgba(28,26,23,0.07);border-radius:8px}
+.stat-label{font-size:11px;color:#7A766D}
+.stat-val{font-size:13px;font-weight:500;color:#1C1A17}
+
+.intents{padding:0 12px 12px}
+.intents-label{font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:#B8B3A8;margin-bottom:8px}
+.intent-badge{display:inline-block;padding:3px 9px;border-radius:100px;font-size:11px;margin:2px;font-weight:500}
+.intent-booking{background:#D8F3DC;color:#2D6A4F}
+.intent-question{background:#E6F1FB;color:#185FA5}
+.intent-emergency{background:#FCEBEB;color:#A32D2D}
+.intent-greeting{background:#FAEEDA;color:#633806}
+.intent-other{background:#F1EFE8;color:#5F5E5A}
+
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+
+.chat-topbar{padding:14px 20px;border-bottom:0.5px solid rgba(28,26,23,0.07);display:flex;align-items:center;gap:12px;background:#FFFEF9}
+.karen-avatar{width:32px;height:32px;border-radius:50%;background:#D8F3DC;display:flex;align-items:center;justify-content:center;font-family:'Lora',serif;font-size:12px;color:#2D6A4F}
+.karen-name{font-size:14px;font-weight:500}
+.karen-mode{font-size:11px;color:#7A766D}
+.topbar-right{margin-left:auto;display:flex;gap:8px}
+.mode-chip{padding:4px 12px;border-radius:100px;font-size:11px;cursor:pointer;border:0.5px solid rgba(28,26,23,0.15);background:transparent;color:#7A766D;font-family:'DM Sans',sans-serif;transition:all 0.15s}
+.mode-chip.active{background:#1C1A17;color:#FAF8F3;border-color:#1C1A17}
+
+.messages{flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:12px}
+
+.msg-wrap{display:flex;flex-direction:column;max-width:72%}
+.msg-wrap.user{align-self:flex-end;align-items:flex-end}
+.msg-wrap.karen{align-self:flex-start;align-items:flex-start}
+
+.bubble{padding:10px 14px;border-radius:16px;font-size:14px;line-height:1.55}
+.msg-wrap.user .bubble{background:#1C1A17;color:#FAF8F3;border-bottom-right-radius:4px}
+.msg-wrap.karen .bubble{background:#FFFEF9;border:0.5px solid rgba(28,26,23,0.1);color:#1C1A17;border-bottom-left-radius:4px}
+
+.msg-meta{display:flex;align-items:center;gap:6px;margin-top:4px;padding:0 4px}
+.msg-time{font-size:10px;color:#B8B3A8}
+.msg-intent{font-size:10px;padding:2px 7px;border-radius:100px}
+
+.typing-wrap{align-self:flex-start;display:flex;align-items:flex-start;gap:8px}
+.typing-avatar{width:24px;height:24px;border-radius:50%;background:#D8F3DC;display:flex;align-items:center;justify-content:center;font-size:9px;color:#2D6A4F;font-family:'Lora',serif;flex-shrink:0;margin-top:2px}
+.typing-dots{background:#FFFEF9;border:0.5px solid rgba(28,26,23,0.1);border-radius:12px;padding:10px 14px;display:flex;gap:4px}
+.dot{width:6px;height:6px;border-radius:50%;background:#B8B3A8;animation:typing 1.2s ease-in-out infinite}
+.dot:nth-child(2){animation-delay:0.2s}
+.dot:nth-child(3){animation-delay:0.4s}
+@keyframes typing{0%,60%,100%{transform:translateY(0);opacity:0.4}30%{transform:translateY(-5px);opacity:1}}
+
+.input-area{padding:16px 20px;border-top:0.5px solid rgba(28,26,23,0.07);background:#FFFEF9;display:flex;gap:10px;align-items:flex-end}
+.input-wrap{flex:1;background:#FAF8F3;border:0.5px solid rgba(28,26,23,0.12);border-radius:16px;padding:10px 16px;display:flex;align-items:center}
+textarea{flex:1;background:transparent;border:none;outline:none;font-size:14px;font-family:'DM Sans',sans-serif;color:#1C1A17;resize:none;max-height:100px;line-height:1.5}
+textarea::placeholder{color:#B8B3A8}
+.send-btn{width:40px;height:40px;border-radius:50%;background:#2D6A4F;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s;flex-shrink:0}
+.send-btn:hover{background:#1C1A17;transform:scale(1.05)}
+.send-btn:disabled{opacity:0.4;cursor:default;transform:none}
+
+.quick-chips{padding:0 20px 10px;display:flex;gap:6px;flex-wrap:wrap}
+.chip{padding:5px 12px;border-radius:100px;font-size:12px;border:0.5px solid rgba(28,26,23,0.12);background:transparent;color:#7A766D;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.15s;white-space:nowrap}
+.chip:hover{background:#FFFEF9;color:#1C1A17;border-color:rgba(28,26,23,0.25)}
+
+.system-msg{align-self:center;font-size:11px;color:#B8B3A8;padding:4px 12px;background:rgba(28,26,23,0.04);border-radius:100px}
+</style>
+</head>
+<body>
+
+<div class="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-logo">Karen<span>.</span></div>
+    <div class="sidebar-sub">Brain Test Playground</div>
+  </div>
+
+  <div class="business-card">
+    <div class="biz-name">Sanitär Meier</div>
+    <div class="biz-type">Sanitär & Heizungsbau · Ennigerloh</div>
+    <div class="biz-status"><div class="biz-dot"></div>Karen ist aktiv</div>
+  </div>
+
+  <div class="stats">
+    <div class="stat-item"><span class="stat-label">Gespräche heute</span><span class="stat-val" id="convCount">1</span></div>
+    <div class="stat-item"><span class="stat-label">Nachrichten</span><span class="stat-val" id="msgCount">0</span></div>
+    <div class="stat-item"><span class="stat-label">Letzter Intent</span><span class="stat-val" id="lastIntent">—</span></div>
+  </div>
+
+  <div class="intents">
+    <div class="intents-label">Erkannte Intents</div>
+    <div id="intentHistory"></div>
+  </div>
+</div>
+
+<div class="main">
+  <div class="chat-topbar">
+    <div class="karen-avatar">K</div>
+    <div>
+      <div class="karen-name">Karen</div>
+      <div class="karen-mode">Assistentin · Sanitär Meier</div>
+    </div>
+    <div class="topbar-right">
+      <button class="mode-chip active" onclick="setPersona('customer')" id="chip-customer">Ich bin Kunde</button>
+      <button class="mode-chip" onclick="setPersona('owner')" id="chip-owner">Ich bin Inhaber</button>
+      <button class="mode-chip" onclick="resetChat()" style="color:#A32D2D;border-color:rgba(163,45,45,0.3)">Reset</button>
+    </div>
+  </div>
+
+  <div class="messages" id="messages">
+    <div class="system-msg">Karen Playground gestartet — Sanitär Meier Demo</div>
+    <div class="msg-wrap karen">
+      <div class="bubble">Guten Tag, Sie sind bei Sanitär Meier. Was kann ich für Sie tun?</div>
+      <div class="msg-meta"><span class="msg-time">Jetzt</span></div>
+    </div>
+  </div>
+
+  <div class="quick-chips" id="quickChips">
+    <button class="chip" onclick="quickSend('Ich brauche einen Termin für nächste Woche')">Termin buchen</button>
+    <button class="chip" onclick="quickSend('Was kostet ein Notdienst?')">Preise fragen</button>
+    <button class="chip" onclick="quickSend('Ich habe einen Rohrbruch!')">Notfall testen</button>
+    <button class="chip" onclick="quickSend('Habt ihr am Samstag geöffnet?')">Öffnungszeiten</button>
+    <button class="chip" onclick="quickSend('Hallo')">Begrüßung</button>
+  </div>
+
+  <div class="input-area">
+    <div class="input-wrap">
+      <textarea id="userInput" placeholder="Nachricht an Karen schreiben..." rows="1" onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
+    </div>
+    <button class="send-btn" id="sendBtn" onclick="sendMessage()">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <path d="M13.5 8L2.5 3l2.5 5-2.5 5z" fill="white"/>
+        <path d="M5 8h8.5" stroke="white" stroke-width="1.3" stroke-linecap="round"/>
+      </svg>
+    </button>
+  </div>
+</div>
+
+<script>
+const SYSTEM_PROMPT = `Du bist Karen — die persönliche Assistentin von Sanitär Meier.
+
+Deine Persönlichkeit:
+- Warm, freundlich, professionell — wie eine Kollegin die schon 5 Jahre dabei ist
+- Du redest wie ein echter Mensch, nicht wie ein Bot
+- Kurze Sätze. Kein Fachchinesisch. Kein "Gerne helfe ich Ihnen weiter!"
+- Du weißt wann du weiterleitest — du erfindest nichts
+
+Dein Ton:
+- Sieze immer (Sie/Ihnen) — außer der Kunde fängt mit Du an
+- Kein Ausrufezeichen-Spam. Ein "!" pro Gespräch reicht
+- Keine Emojis außer der Kunde nutzt sie zuerst
+- Max 3 Sätze pro Antwort — keine langen Erklärungen
+
+=== DEIN BETRIEB ===
+Name: Sanitär Meier
+Inhaber: Thomas Meier
+Art: Sanitär & Heizungsbau
+Standort: Ennigerloh, NRW
+
+Leistungen: Rohrbruch & Notdienst, Heizungsinstallation & Wartung, Badezimmer-Renovierung, Wasserhahn & Armaturen, Kanalreinigung
+
+Preise:
+- Notdienst (nachts/wochenende): ab 150€
+- Stundensatz: 85€/h
+- Badezimmer-Renovierung: auf Anfrage
+
+Öffnungszeiten:
+- Mo–Fr: 7:00 – 17:00 Uhr
+- Sa: 8:00 – 13:00 Uhr
+- So: Nur Notdienst
+
+=== REGELN ===
+NOTFALL (rohrbruch, überschwemmung, kein wasser, gas): Sofort sagen sie sollen +49 151 00000000 anrufen
+TERMIN: Frag nach Art der Arbeit → Datum/Zeit → Name + Adresse (einen Schritt auf einmal)
+UNBEKANNT: Ehrlich sagen dass du es weitergibst
+Jede Antwort endet mit klarer Aussage was als nächstes passiert.`;
+
+let history = [];
+let msgCount = 0;
+let persona = 'customer';
+let intentCounts = {};
+
+function setPersona(p) {
+  persona = p;
+  document.getElementById('chip-customer').className = 'mode-chip' + (p === 'customer' ? ' active' : '');
+  document.getElementById('chip-owner').className = 'mode-chip' + (p === 'owner' ? ' active' : '');
+}
+
+function getTime() {
+  return new Date().toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' });
+}
+
+function autoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 100) + 'px';
+}
+
+function handleKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+}
+
+function quickSend(text) {
+  document.getElementById('userInput').value = text;
+  sendMessage();
+}
+
+function detectIntent(text) {
+  const t = text.toLowerCase();
+  if (/rohrbruch|notfall|überschwemmung|kein wasser|gas|feuer/.test(t)) return 'emergency';
+  if (/termin|buchen|wann|verfügbar|nächste woche|montag|dienstag|mittwoch|donnerstag|freitag/.test(t)) return 'booking';
+  if (/hallo|guten|hi|hey|morgen/.test(t)) return 'greeting';
+  if (/kostet|preis|wie viel|was nehmt|stundensatz|was berechnet/.test(t)) return 'question';
+  return 'other';
+}
+
+function addIntentBadge(intent) {
+  const labels = { booking: 'Termin', question: 'Frage', emergency: 'NOTFALL', greeting: 'Begrüßung', other: 'Sonstiges' };
+  const el = document.createElement('span');
+  el.className = `intent-badge intent-${intent}`;
+  el.textContent = labels[intent] || intent;
+  document.getElementById('intentHistory').prepend(el);
+  document.getElementById('lastIntent').textContent = labels[intent] || intent;
+  intentCounts[intent] = (intentCounts[intent] || 0) + 1;
+}
+
+function addMessage(role, text, intent) {
+  const container = document.getElementById('messages');
+  const wrap = document.createElement('div');
+  wrap.className = `msg-wrap ${role}`;
+
+  const bubble = document.createElement('div');
+  bubble.className = 'bubble';
+  bubble.textContent = text;
+
+  const meta = document.createElement('div');
+  meta.className = 'msg-meta';
+
+  const time = document.createElement('span');
+  time.className = 'msg-time';
+  time.textContent = getTime();
+  meta.appendChild(time);
+
+  if (intent && role === 'user') {
+    const badge = document.createElement('span');
+    const labels = { booking: 'Termin', question: 'Frage', emergency: 'Notfall', greeting: 'Begrüßung', other: 'Sonstiges' };
+    const colors = { booking: 'intent-booking', question: 'intent-question', emergency: 'intent-emergency', greeting: 'intent-greeting', other: 'intent-other' };
+    badge.className = `msg-intent ${colors[intent]}`;
+    badge.textContent = labels[intent];
+    meta.appendChild(badge);
+  }
+
+  wrap.appendChild(bubble);
+  wrap.appendChild(meta);
+  container.appendChild(wrap);
+  container.scrollTop = container.scrollHeight;
+
+  msgCount++;
+  document.getElementById('msgCount').textContent = msgCount;
+}
+
+function showTyping() {
+  const container = document.getElementById('messages');
+  const wrap = document.createElement('div');
+  wrap.className = 'typing-wrap';
+  wrap.id = 'typingIndicator';
+  wrap.innerHTML = `
+    <div class="typing-avatar">K</div>
+    <div class="typing-dots">
+      <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+    </div>`;
+  container.appendChild(wrap);
+  container.scrollTop = container.scrollHeight;
+}
+
+function hideTyping() {
+  const el = document.getElementById('typingIndicator');
+  if (el) el.remove();
+}
+
+async function sendMessage() {
+  const input = document.getElementById('userInput');
+  const text = input.value.trim();
+  if (!text) return;
+
+  const btn = document.getElementById('sendBtn');
+  btn.disabled = true;
+  input.value = '';
+  input.style.height = 'auto';
+
+  const intent = detectIntent(text);
+  addMessage('user', text, intent);
+  addIntentBadge(intent);
+
+  history.push({ role: 'user', content: text });
+  showTyping();
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        system: SYSTEM_PROMPT,
+        messages: history
+      })
+    });
+
+    const data = await res.json();
+    const reply = data.content?.[0]?.text || 'Ich bin kurz nicht erreichbar. Bitte versuchen Sie es gleich nochmal.';
+
+    hideTyping();
+    history.push({ role: 'assistant', content: reply });
+    addMessage('karen', reply);
+
+  } catch(e) {
+    hideTyping();
+    addMessage('karen', 'Entschuldigung, es gab einen kurzen Fehler. Bitte nochmal versuchen.');
+  }
+
+  btn.disabled = false;
+  input.focus();
+}
+
+function resetChat() {
+  history = [];
+  msgCount = 0;
+  document.getElementById('msgCount').textContent = '0';
+  document.getElementById('lastIntent').textContent = '—';
+  document.getElementById('intentHistory').innerHTML = '';
+  document.getElementById('messages').innerHTML = `
+    <div class="system-msg">Gespräch zurückgesetzt</div>
+    <div class="msg-wrap karen">
+      <div class="bubble">Guten Tag, Sie sind bei Sanitär Meier. Was kann ich für Sie tun?</div>
+      <div class="msg-meta"><span class="msg-time">${getTime()}</span></div>
+    </div>`;
+  history.push({ role: 'assistant', content: 'Guten Tag, Sie sind bei Sanitär Meier. Was kann ich für Sie tun?' });
+}
+
+history.push({ role: 'assistant', content: 'Guten Tag, Sie sind bei Sanitär Meier. Was kann ich für Sie tun?' });
+</script>
+</body>
+</html>
