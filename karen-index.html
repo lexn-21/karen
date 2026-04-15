@@ -1,0 +1,1232 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Karen — Die Mitarbeiterin die nie fehlt</title>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#1A1917;--ink-soft:#3A3835;--ink-muted:#78746B;--ink-faint:#B5B0A5;
+  --cream:#FAF8F3;--white:#FFFEFB;
+  --green:#2D6A4F;--green-mid:#52B788;--green-pale:#D8F3DC;--green-faint:#F0FAF2;
+  --border:rgba(26,25,23,0.1);--border-soft:rgba(26,25,23,0.06);
+  --red:#A32D2D;--red-pale:#FCEBEB;
+  --blue:#185FA5;--blue-pale:#E6F1FB;
+  --amber:#9A6B1F;--amber-pale:#FEF3DC;
+}
+body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--ink);min-height:100vh}
+
+/* ── VIEWS ── */
+.view{display:none}
+.view.active{display:block}
+
+/* ══════════════════════════════════
+   LANDING PAGE
+══════════════════════════════════ */
+.lp-nav{position:fixed;top:0;left:0;right:0;z-index:100;height:58px;padding:0 1.5rem;display:flex;align-items:center;justify-content:space-between;background:rgba(250,248,243,0.94);backdrop-filter:blur(12px);border-bottom:0.5px solid var(--border)}
+.lp-logo{font-family:'Lora',serif;font-size:20px;color:var(--ink)}
+.lp-logo span{color:var(--green)}
+.lp-nav-links{display:flex;gap:1.5rem;align-items:center;list-style:none}
+.lp-nav-links a{font-size:13px;color:var(--ink-muted);text-decoration:none;transition:color 0.2s}
+.lp-nav-links a:hover{color:var(--ink)}
+.btn-primary{padding:10px 22px;background:var(--ink);color:var(--cream);border:none;border-radius:100px;font-size:13px;font-family:'DM Sans',sans-serif;font-weight:500;cursor:pointer;transition:all 0.2s;text-decoration:none;display:inline-block}
+.btn-primary:hover{background:var(--green)}
+.btn-secondary{padding:10px 20px;background:transparent;color:var(--ink-soft);border:0.5px solid var(--border);border-radius:100px;font-size:13px;font-family:'DM Sans',sans-serif;cursor:pointer;transition:all 0.2s;text-decoration:none;display:inline-block}
+.btn-secondary:hover{background:var(--white)}
+
+.lp-hero{min-height:100vh;padding:100px 1.5rem 60px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.lp-badge{display:inline-flex;align-items:center;gap:6px;padding:5px 14px;background:var(--green-faint);border:0.5px solid rgba(45,106,79,0.2);border-radius:100px;font-size:12px;color:var(--green);font-weight:500;margin-bottom:2rem;animation:fade-up 0.5s ease-out both}
+.badge-dot{width:6px;height:6px;border-radius:50%;background:var(--green-mid);animation:blink 2s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+.lp-h1{font-family:'Lora',serif;font-size:clamp(40px,7vw,78px);font-weight:400;line-height:1.1;letter-spacing:-0.02em;margin-bottom:1.25rem;animation:fade-up 0.5s 0.1s ease-out both}
+.lp-h1 em{font-style:italic;color:var(--green)}
+.lp-sub{font-size:clamp(15px,2vw,19px);color:var(--ink-muted);max-width:500px;line-height:1.65;font-weight:300;margin-bottom:2.5rem;animation:fade-up 0.5s 0.2s ease-out both}
+.lp-actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-bottom:3.5rem;animation:fade-up 0.5s 0.3s ease-out both}
+.lp-actions .btn-primary{padding:14px 32px;font-size:15px}
+.lp-actions .btn-secondary{padding:14px 24px;font-size:15px}
+
+.lp-chat-demo{width:100%;max-width:520px;background:var(--white);border:0.5px solid var(--border);border-radius:20px;overflow:hidden;animation:fade-up 0.6s 0.4s ease-out both;box-shadow:0 20px 60px rgba(26,25,23,0.07)}
+.demo-header{padding:14px 16px;border-bottom:0.5px solid var(--border-soft);display:flex;align-items:center;gap:10px}
+.demo-avatar{width:34px;height:34px;border-radius:50%;background:var(--green-pale);display:flex;align-items:center;justify-content:center;font-family:'Lora',serif;font-size:13px;color:var(--green)}
+.demo-name{font-size:13px;font-weight:500}
+.demo-status{font-size:11px;color:var(--green);display:flex;align-items:center;gap:4px}
+.demo-status::before{content:'';display:block;width:5px;height:5px;border-radius:50%;background:var(--green-mid)}
+.demo-messages{padding:16px;display:flex;flex-direction:column;gap:8px}
+.demo-msg{padding:9px 13px;border-radius:14px;font-size:13px;line-height:1.5;max-width:82%;animation:msg-in 0.4s ease-out both}
+.demo-msg.in{background:#F0F0ED;color:var(--ink-soft);align-self:flex-start;border-bottom-left-radius:3px}
+.demo-msg.out{background:var(--green);color:#E8F5ED;align-self:flex-end;border-bottom-right-radius:3px}
+@keyframes msg-in{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+.m1{animation-delay:0.7s}.m2{animation-delay:1.3s}.m3{animation-delay:2.1s}.m4{animation-delay:2.9s}
+
+.lp-trust{display:flex;align-items:center;justify-content:center;gap:2rem;flex-wrap:wrap;padding:1.25rem 1.5rem;background:var(--white);border-top:0.5px solid var(--border);border-bottom:0.5px solid var(--border)}
+.trust-item{font-size:12px;color:var(--ink-muted);display:flex;align-items:center;gap:6px}
+.trust-check{width:14px;height:14px;color:var(--green-mid)}
+
+.lp-section{padding:70px 1.5rem;max-width:960px;margin:0 auto}
+.lp-eyebrow{font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--green);font-weight:500;margin-bottom:0.75rem}
+.lp-section-title{font-family:'Lora',serif;font-size:clamp(26px,4vw,42px);font-weight:400;letter-spacing:-0.02em;line-height:1.2;margin-bottom:2.5rem}
+.lp-section-title em{font-style:italic;color:var(--green)}
+
+.steps-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1px;background:var(--border);border:0.5px solid var(--border);border-radius:16px;overflow:hidden}
+.step-box{background:var(--white);padding:1.75rem 1.5rem}
+.step-n{font-family:'Lora',serif;font-size:32px;color:var(--green-pale);margin-bottom:0.75rem}
+.step-t{font-size:14px;font-weight:500;margin-bottom:0.5rem}
+.step-d{font-size:13px;color:var(--ink-muted);line-height:1.6}
+
+.industry-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px}
+.ind-card{background:var(--white);border:0.5px solid var(--border);border-radius:14px;padding:1.25rem;transition:all 0.2s;cursor:default}
+.ind-card:hover{border-color:rgba(45,106,79,0.3);background:var(--green-faint);transform:translateY(-2px)}
+.ind-icon{font-size:20px;width:38px;height:38px;background:var(--cream);border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:8px}
+.ind-name{font-size:13px;font-weight:500}
+.ind-ex{font-size:11px;color:var(--ink-muted);margin-top:2px}
+
+.pricing-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+.price-card{background:var(--white);border:0.5px solid var(--border);border-radius:18px;padding:1.75rem}
+.price-card.feat{background:var(--ink);border-color:var(--ink)}
+.price-tag{font-size:11px;padding:3px 10px;border-radius:100px;font-weight:500;display:inline-block;margin-bottom:0.75rem;background:var(--green-pale);color:var(--green)}
+.price-card.feat .price-tag{background:rgba(82,183,136,0.2);color:var(--green-mid)}
+.price-name{font-family:'Lora',serif;font-size:20px;font-weight:400;margin-bottom:0.5rem}
+.price-card.feat .price-name{color:var(--cream)}
+.price-amt{font-size:36px;font-weight:500;letter-spacing:-0.02em;line-height:1;margin-bottom:0.25rem}
+.price-card.feat .price-amt{color:var(--cream)}
+.price-per{font-size:13px;color:var(--ink-muted);margin-bottom:1.25rem}
+.price-card.feat .price-per{color:rgba(250,248,243,0.45)}
+.price-feats{list-style:none;display:flex;flex-direction:column;gap:7px;margin-bottom:1.5rem}
+.price-feats li{font-size:13px;color:var(--ink-soft);display:flex;align-items:flex-start;gap:8px;line-height:1.4}
+.price-card.feat .price-feats li{color:rgba(250,248,243,0.7)}
+.pf-check{width:16px;height:16px;border-radius:50%;background:var(--green-pale);color:var(--green);font-size:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.price-card.feat .pf-check{background:rgba(82,183,136,0.2);color:var(--green-mid)}
+.price-btn{width:100%;padding:12px;border-radius:100px;font-size:14px;font-family:'DM Sans',sans-serif;font-weight:500;cursor:pointer;transition:all 0.2s;border:0.5px solid var(--border);background:transparent;color:var(--ink)}
+.price-card.feat .price-btn{background:var(--green);border-color:var(--green);color:white}
+.price-btn:hover{opacity:0.8}
+
+.lp-quote{background:var(--ink);padding:70px 1.5rem;text-align:center}
+.lp-quote-text{font-family:'Lora',serif;font-size:clamp(22px,4vw,38px);font-weight:400;font-style:italic;color:var(--cream);line-height:1.35;max-width:640px;margin:0 auto 1rem}
+.lp-quote-text em{font-style:normal;color:var(--green-mid)}
+.lp-quote-sub{font-size:13px;color:rgba(250,248,243,0.35)}
+
+.lp-cta-section{padding:70px 1.5rem;text-align:center}
+.waitlist-form{display:flex;gap:8px;max-width:440px;margin:1.5rem auto 0;flex-wrap:wrap;justify-content:center}
+.waitlist-input{flex:1;min-width:180px;padding:13px 18px;background:var(--white);border:0.5px solid var(--border);border-radius:100px;font-size:14px;font-family:'DM Sans',sans-serif;color:var(--ink);outline:none}
+.waitlist-input:focus{border-color:rgba(45,106,79,0.4)}
+.waitlist-input::placeholder{color:var(--ink-faint)}
+.waitlist-submit{padding:13px 24px;background:var(--green);color:white;border:none;border-radius:100px;font-size:14px;font-family:'DM Sans',sans-serif;font-weight:500;cursor:pointer;transition:all 0.2s;white-space:nowrap}
+.waitlist-submit:hover{background:var(--ink)}
+.waitlist-note{font-size:12px;color:var(--ink-faint);margin-top:10px}
+.waitlist-success{display:none;padding:12px 20px;background:var(--green-faint);border:0.5px solid rgba(45,106,79,0.2);border-radius:100px;font-size:13px;color:var(--green);font-weight:500;margin-top:12px}
+
+.lp-footer{padding:1.5rem;border-top:0.5px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem}
+.footer-logo{font-family:'Lora',serif;font-size:16px}
+.footer-logo span{color:var(--green)}
+.footer-links{display:flex;gap:1.5rem;list-style:none}
+.footer-links a{font-size:12px;color:var(--ink-muted);text-decoration:none}
+.footer-copy{font-size:12px;color:var(--ink-faint)}
+
+@keyframes fade-up{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+
+/* ══════════════════════════════════
+   ONBOARDING
+══════════════════════════════════ */
+.ob-wrap{min-height:100vh;background:var(--cream);padding-top:58px}
+.ob-nav{position:fixed;top:0;left:0;right:0;z-index:100;height:58px;padding:0 1.5rem;display:flex;align-items:center;justify-content:space-between;background:rgba(250,248,243,0.94);backdrop-filter:blur(12px);border-bottom:0.5px solid var(--border)}
+.ob-progress{position:fixed;top:58px;left:0;right:0;height:3px;background:var(--border-soft);z-index:99}
+.ob-progress-fill{height:100%;background:var(--green);transition:width 0.5s cubic-bezier(0.4,0,0.2,1)}
+.ob-page{max-width:520px;margin:0 auto;padding:2rem 1.25rem 4rem}
+.ob-step{display:none;animation:fade-up 0.35s ease-out both}
+.ob-step.active{display:block}
+.ob-dots{display:flex;gap:5px;margin-bottom:1.75rem}
+.ob-dot{width:6px;height:6px;border-radius:50%;background:var(--border);transition:all 0.3s}
+.ob-dot.done{background:var(--green-mid)}
+.ob-dot.cur{background:var(--green);width:20px;border-radius:3px}
+.ob-eyebrow{font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--green);font-weight:500;margin-bottom:0.6rem}
+.ob-title{font-family:'Lora',serif;font-size:clamp(24px,5vw,34px);font-weight:400;letter-spacing:-0.02em;line-height:1.2;margin-bottom:0.7rem}
+.ob-title em{font-style:italic;color:var(--green)}
+.ob-sub{font-size:14px;color:var(--ink-muted);line-height:1.6;margin-bottom:1.75rem;font-weight:300}
+.ob-fields{display:flex;flex-direction:column;gap:0.9rem;margin-bottom:1.5rem}
+.ob-field{display:flex;flex-direction:column;gap:5px}
+.ob-field label{font-size:13px;font-weight:500;color:var(--ink-soft)}
+.ob-field .hint{font-size:11px;color:var(--ink-faint)}
+.ob-field .err{font-size:12px;color:var(--red);display:none}
+.ob-field.has-err input,.ob-field.has-err select,.ob-field.has-err textarea{border-color:rgba(163,45,45,0.4)}
+.ob-field.has-err .err{display:block}
+input[type=text],input[type=tel],input[type=email],select,textarea{width:100%;padding:11px 15px;background:var(--white);border:0.5px solid var(--border);border-radius:11px;font-size:14px;font-family:'DM Sans',sans-serif;color:var(--ink);outline:none;transition:border-color 0.2s;-webkit-appearance:none}
+input:focus,select:focus,textarea:focus{border-color:rgba(45,106,79,0.4);box-shadow:0 0 0 3px rgba(45,106,79,0.07)}
+input::placeholder,textarea::placeholder{color:var(--ink-faint)}
+textarea{resize:none;line-height:1.5}
+select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2378746B' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 13px center;padding-right:34px;cursor:pointer}
+.tag-wrap{display:flex;flex-direction:column;gap:7px}
+.tags{display:flex;flex-wrap:wrap;gap:5px;min-height:28px}
+.tag{display:inline-flex;align-items:center;gap:5px;padding:4px 11px;background:var(--green-faint);border:0.5px solid rgba(45,106,79,0.2);border-radius:100px;font-size:12px;color:var(--green);font-weight:500}
+.tag-x{cursor:pointer;opacity:0.6;font-size:13px;line-height:1;transition:opacity 0.15s}
+.tag-x:hover{opacity:1}
+.tag-row{display:flex;gap:7px}
+.tag-row input{flex:1}
+.tag-add{padding:11px 16px;background:transparent;border:0.5px solid var(--border);border-radius:11px;font-size:13px;font-family:'DM Sans',sans-serif;color:var(--ink-muted);cursor:pointer;white-space:nowrap;transition:all 0.15s}
+.tag-add:hover{background:var(--white);color:var(--ink)}
+.hours-grid{display:grid;grid-template-columns:72px 1fr 1fr;gap:7px;align-items:center;margin-top:7px}
+.hours-label{font-size:13px;color:var(--ink-soft);font-weight:500}
+.radio-opts{display:flex;flex-direction:column;gap:7px}
+.radio-opt{display:flex;align-items:center;gap:11px;padding:13px 15px;background:var(--white);border:0.5px solid var(--border);border-radius:12px;cursor:pointer;transition:all 0.15s}
+.radio-opt:hover{border-color:rgba(45,106,79,0.3);background:var(--green-faint)}
+.radio-opt.sel{border-color:rgba(45,106,79,0.5);background:var(--green-faint)}
+.radio-circle{width:18px;height:18px;border-radius:50%;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.15s}
+.radio-opt.sel .radio-circle{border-color:var(--green);background:var(--green)}
+.radio-inner{width:7px;height:7px;border-radius:50%;background:white;display:none}
+.radio-opt.sel .radio-inner{display:block}
+.radio-text .rt{font-size:14px;font-weight:500}
+.radio-text .rd{font-size:12px;color:var(--ink-muted);margin-top:1px}
+.ob-preview{background:var(--white);border:0.5px solid var(--border);border-radius:14px;padding:14px;margin-bottom:1.5rem}
+.ob-preview-header{display:flex;align-items:center;gap:9px;margin-bottom:12px;padding-bottom:11px;border-bottom:0.5px solid var(--border-soft)}
+.ob-preview-avatar{width:30px;height:30px;border-radius:50%;background:var(--green-pale);display:flex;align-items:center;justify-content:center;font-family:'Lora',serif;font-size:11px;color:var(--green)}
+.ob-preview-name{font-size:13px;font-weight:500}
+.ob-preview-status{font-size:11px;color:var(--green);display:flex;align-items:center;gap:3px}
+.ob-preview-status::before{content:'';display:block;width:5px;height:5px;border-radius:50%;background:var(--green-mid)}
+.ob-preview-msg{padding:8px 12px;background:#F0F0ED;border-radius:11px;border-bottom-left-radius:3px;font-size:13px;color:var(--ink-soft);line-height:1.5;display:inline-block;max-width:88%}
+.btn-row{display:flex;gap:9px;margin-top:1.75rem}
+.btn-next{flex:1;padding:13px;background:var(--ink);color:var(--cream);border:none;border-radius:100px;font-size:15px;font-family:'DM Sans',sans-serif;font-weight:500;cursor:pointer;transition:all 0.2s}
+.btn-next:hover{background:var(--green)}
+.btn-back{padding:13px 18px;background:transparent;border:0.5px solid var(--border);border-radius:100px;font-size:15px;font-family:'DM Sans',sans-serif;color:var(--ink-muted);cursor:pointer;transition:all 0.2s}
+.btn-back:hover{background:var(--white);color:var(--ink)}
+.summary-card{background:var(--white);border:0.5px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:1rem}
+.sum-row{display:flex;justify-content:space-between;padding:11px 15px;border-bottom:0.5px solid var(--border-soft);gap:10px}
+.sum-row:last-child{border-bottom:none}
+.sum-k{font-size:12px;color:var(--ink-muted);flex-shrink:0}
+.sum-v{font-size:13px;color:var(--ink);text-align:right;line-height:1.4}
+.done-icon{width:60px;height:60px;border-radius:50%;background:var(--green-pale);display:flex;align-items:center;justify-content:center;margin:0 auto 1.25rem}
+
+/* ══════════════════════════════════
+   APP (DASHBOARD)
+══════════════════════════════════ */
+.app-wrap{height:100vh;display:flex;flex-direction:column;overflow:hidden;background:var(--cream)}
+.app-topnav{height:56px;display:flex;align-items:center;padding:0 1rem;gap:10px;background:var(--white);border-bottom:0.5px solid var(--border);flex-shrink:0;z-index:20}
+.app-logo{font-family:'Lora',serif;font-size:18px}
+.app-logo span{color:var(--green)}
+.app-biz-pill{flex:1;display:flex;justify-content:center}
+.biz-pill{display:inline-flex;align-items:center;gap:6px;padding:4px 13px;background:var(--green-faint);border:0.5px solid rgba(45,106,79,0.15);border-radius:100px;font-size:12px;color:var(--green);font-weight:500}
+.biz-dot{width:5px;height:5px;border-radius:50%;background:var(--green-mid);animation:blink 2s infinite}
+.app-tabbar{display:flex;background:var(--white);border-bottom:0.5px solid var(--border);flex-shrink:0}
+.app-tab{flex:1;padding:9px 4px 7px;border:none;background:transparent;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;font-family:'DM Sans',sans-serif;font-size:10px;color:var(--ink-faint);transition:color 0.2s;position:relative}
+.app-tab.active{color:var(--green)}
+.app-tab-ind{position:absolute;bottom:0;left:22%;right:22%;height:2px;background:var(--green);border-radius:2px 2px 0 0;opacity:0;transition:opacity 0.2s}
+.app-tab.active .app-tab-ind{opacity:1}
+.app-tab svg{width:18px;height:18px}
+.app-screens{flex:1;overflow:hidden;position:relative}
+.app-screen{display:none;height:100%;overflow-y:auto;flex-direction:column}
+.app-screen.active{display:flex}
+
+/* HOME SCREEN */
+.home-hdr{padding:16px 14px 10px}
+.home-greet{font-family:'Lora',serif;font-size:20px;font-weight:400;letter-spacing:-0.01em}
+.home-greet em{font-style:italic;color:var(--green)}
+.home-date{font-size:12px;color:var(--ink-muted);margin-top:2px}
+.stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;padding:0 14px 14px}
+.stat-c{background:var(--white);border:0.5px solid var(--border);border-radius:12px;padding:12px 10px}
+.stat-n{font-size:24px;font-weight:500;letter-spacing:-0.02em;line-height:1}
+.stat-n.g{color:var(--green)}
+.stat-n.a{color:var(--amber)}
+.stat-l{font-size:11px;color:var(--ink-muted);margin-top:3px;line-height:1.3}
+.ai-summary{margin:0 14px 14px;background:var(--ink);border-radius:14px;padding:14px}
+.ai-sum-label{font-family:'Lora',serif;font-size:13px;font-style:italic;color:rgba(250,248,243,0.5);margin-bottom:7px}
+.ai-sum-text{font-size:13px;color:var(--cream);line-height:1.6}
+.ai-sum-btn{margin-top:10px;padding:7px 14px;background:rgba(250,248,243,0.1);border:0.5px solid rgba(250,248,243,0.15);border-radius:100px;font-size:12px;color:var(--cream);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.15s}
+.ai-sum-btn:hover{background:rgba(250,248,243,0.18)}
+.sec-hdr{padding:2px 14px 8px;display:flex;justify-content:space-between;align-items:center}
+.sec-title{font-size:13px;font-weight:500}
+.sec-link{font-size:12px;color:var(--green);cursor:pointer}
+.activity-list{padding:0 14px 80px;display:flex;flex-direction:column;gap:7px}
+.act-item{background:var(--white);border:0.5px solid var(--border);border-radius:13px;padding:12px;display:flex;gap:10px;cursor:pointer;transition:all 0.15s}
+.act-item:hover{border-color:rgba(45,106,79,0.3);background:var(--green-faint)}
+.act-icon{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.act-icon.book{background:var(--green-pale)}
+.act-icon.quest{background:var(--blue-pale)}
+.act-icon.emrg{background:var(--red-pale)}
+.act-body{flex:1;min-width:0}
+.act-top{display:flex;justify-content:space-between;gap:6px;margin-bottom:2px}
+.act-name{font-size:13px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.act-time{font-size:11px;color:var(--ink-faint);flex-shrink:0}
+.act-text{font-size:12px;color:var(--ink-muted);line-height:1.4;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.act-badge{font-size:10px;padding:2px 7px;border-radius:100px;font-weight:500;margin-top:4px;display:inline-block}
+.b-book{background:var(--green-pale);color:var(--green)}
+.b-quest{background:var(--blue-pale);color:var(--blue)}
+.b-emrg{background:var(--red-pale);color:var(--red)}
+
+/* CHAT SCREEN */
+.chat-search{padding:10px 14px;position:sticky;top:0;background:var(--cream);z-index:5}
+.chat-search input{width:100%;padding:9px 14px 9px 38px;background:var(--white);border:0.5px solid var(--border);border-radius:11px;font-size:13px;font-family:'DM Sans',sans-serif;color:var(--ink);outline:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 14 14' fill='none'%3E%3Ccircle cx='6' cy='6' r='4.5' stroke='%23B5B0A5' stroke-width='1.2'/%3E%3Cpath d='M10 10l2.5 2.5' stroke='%23B5B0A5' stroke-width='1.2' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:12px center}
+.chat-search input::placeholder{color:var(--ink-faint)}
+.conv-list{padding:0 14px 14px;display:flex;flex-direction:column;gap:5px}
+.conv-item{background:var(--white);border:0.5px solid var(--border);border-radius:13px;padding:12px;display:flex;gap:10px;cursor:pointer;transition:all 0.15s;position:relative}
+.conv-item:hover{border-color:rgba(45,106,79,0.3)}
+.conv-item.unread{border-left:3px solid var(--green)}
+.conv-av{width:38px;height:38px;border-radius:50%;background:var(--green-pale);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:500;color:var(--green);flex-shrink:0;font-family:'Lora',serif}
+.conv-body{flex:1;min-width:0}
+.conv-top{display:flex;justify-content:space-between;margin-bottom:2px}
+.conv-name{font-size:14px;font-weight:500}
+.conv-time{font-size:11px;color:var(--ink-faint)}
+.conv-prev{font-size:12px;color:var(--ink-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.conv-prev.k{color:var(--green)}
+.unread-dot{width:8px;height:8px;border-radius:50%;background:var(--green);position:absolute;top:14px;right:12px}
+
+/* CHAT DETAIL */
+.chat-detail{display:none;flex-direction:column;height:100%;background:var(--cream)}
+.chat-detail.open{display:flex}
+.cd-header{padding:10px 14px;background:var(--white);border-bottom:0.5px solid var(--border);display:flex;align-items:center;gap:10px;flex-shrink:0}
+.cd-back{width:30px;height:30px;border-radius:50%;border:0.5px solid var(--border);background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all 0.15s}
+.cd-back:hover{background:var(--cream)}
+.cd-info{flex:1}
+.cd-name{font-size:14px;font-weight:500}
+.cd-sub{font-size:11px;color:var(--ink-muted)}
+.cd-tag{font-size:10px;padding:2px 8px;border-radius:100px;font-weight:500}
+.cd-msgs{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:9px}
+.cd-bwrap{display:flex;flex-direction:column;max-width:78%}
+.cd-bwrap.cust{align-self:flex-start}
+.cd-bwrap.karen{align-self:flex-end}
+.cd-bubble{padding:9px 13px;border-radius:14px;font-size:13px;line-height:1.55}
+.cd-bwrap.cust .cd-bubble{background:var(--white);border:0.5px solid var(--border);border-bottom-left-radius:3px}
+.cd-bwrap.karen .cd-bubble{background:var(--green);color:#E8F5ED;border-bottom-right-radius:3px}
+.cd-time{font-size:10px;color:var(--ink-faint);margin-top:3px;padding:0 4px}
+.cd-bwrap.karen .cd-time{text-align:right}
+.cd-sys{align-self:center;font-size:11px;color:var(--ink-faint);padding:3px 10px;background:rgba(26,25,23,0.05);border-radius:100px}
+.cd-actions{padding:10px 14px;background:var(--white);border-top:0.5px solid var(--border);display:flex;gap:7px;flex-shrink:0}
+.cd-btn{flex:1;padding:9px;border-radius:9px;border:0.5px solid var(--border);background:transparent;font-size:12px;font-family:'DM Sans',sans-serif;color:var(--ink-soft);cursor:pointer;transition:all 0.15s;font-weight:500}
+.cd-btn:hover{background:var(--cream)}
+.cd-btn.pri{background:var(--green);color:white;border-color:var(--green)}
+
+/* CHAT WITH KAREN (LIVE) */
+.karen-chat{display:flex;flex-direction:column;height:100%}
+.kc-header{padding:12px 14px;background:var(--white);border-bottom:0.5px solid var(--border);display:flex;align-items:center;gap:10px;flex-shrink:0}
+.kc-avatar{width:32px;height:32px;border-radius:50%;background:var(--green-pale);display:flex;align-items:center;justify-content:center;font-family:'Lora',serif;font-size:12px;color:var(--green)}
+.kc-info .kn{font-size:14px;font-weight:500}
+.kc-info .ks{font-size:11px;color:var(--green);display:flex;align-items:center;gap:3px}
+.kc-info .ks::before{content:'';display:block;width:4px;height:4px;border-radius:50%;background:var(--green-mid)}
+.kc-msgs{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:9px}
+.kc-bwrap{display:flex;flex-direction:column;max-width:80%}
+.kc-bwrap.user{align-self:flex-end}
+.kc-bwrap.karen{align-self:flex-start}
+.kc-bubble{padding:9px 13px;border-radius:14px;font-size:14px;line-height:1.55;animation:msg-in 0.3s ease-out both}
+.kc-bwrap.user .kc-bubble{background:var(--ink);color:var(--cream);border-bottom-right-radius:3px}
+.kc-bwrap.karen .kc-bubble{background:var(--white);border:0.5px solid var(--border);border-bottom-left-radius:3px}
+.kc-time{font-size:10px;color:var(--ink-faint);margin-top:3px;padding:0 4px}
+.kc-bwrap.user .kc-time{text-align:right}
+.typing{display:flex;gap:3px;padding:9px 13px;background:var(--white);border:0.5px solid var(--border);border-radius:14px;border-bottom-left-radius:3px;width:fit-content;align-self:flex-start}
+.typing span{width:5px;height:5px;border-radius:50%;background:var(--ink-faint);animation:typing-dot 1.2s ease-in-out infinite}
+.typing span:nth-child(2){animation-delay:0.2s}
+.typing span:nth-child(3){animation-delay:0.4s}
+@keyframes typing-dot{0%,60%,100%{transform:translateY(0);opacity:0.4}30%{transform:translateY(-4px);opacity:1}}
+.kc-input{padding:10px 14px;background:var(--white);border-top:0.5px solid var(--border);display:flex;gap:8px;align-items:flex-end;flex-shrink:0}
+.kc-input textarea{flex:1;background:var(--cream);border:0.5px solid var(--border);border-radius:14px;padding:9px 13px;font-size:14px;font-family:'DM Sans',sans-serif;color:var(--ink);resize:none;outline:none;max-height:90px;line-height:1.5}
+.kc-input textarea::placeholder{color:var(--ink-faint)}
+.kc-send{width:36px;height:36px;border-radius:50%;background:var(--green);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s;flex-shrink:0}
+.kc-send:hover{background:var(--ink)}
+.kc-send:disabled{opacity:0.4;cursor:default}
+.quick-chips{padding:0 14px 8px;display:flex;gap:5px;flex-wrap:wrap}
+.qchip{padding:5px 11px;border-radius:100px;font-size:12px;border:0.5px solid var(--border);background:transparent;color:var(--ink-muted);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.15s;white-space:nowrap}
+.qchip:hover{background:var(--white);color:var(--ink)}
+
+/* CALENDAR */
+.cal-hdr{padding:14px 14px 8px;display:flex;justify-content:space-between;align-items:center}
+.cal-month{font-family:'Lora',serif;font-size:17px;font-weight:400}
+.cal-navs{display:flex;gap:5px}
+.cal-nav{width:30px;height:30px;border-radius:50%;border:0.5px solid var(--border);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s}
+.cal-nav:hover{background:var(--white)}
+.cal-grid{padding:0 14px 8px}
+.cal-days{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
+.cal-dl{font-size:10px;color:var(--ink-faint);text-align:center;padding:3px 0;font-weight:500}
+.cal-d{aspect-ratio:1;display:flex;align-items:center;justify-content:center;border-radius:7px;font-size:12px;cursor:pointer;transition:all 0.15s;color:var(--ink-muted);position:relative}
+.cal-d:hover{background:var(--white)}
+.cal-d.today{background:var(--green);color:white;font-weight:500}
+.cal-d.has-ev::after{content:'';position:absolute;bottom:2px;left:50%;transform:translateX(-50%);width:3px;height:3px;border-radius:50%;background:var(--green-mid)}
+.cal-d.today.has-ev::after{background:rgba(255,255,255,0.6)}
+.cal-d.other{opacity:0.3}
+.appt-list{padding:6px 14px 80px;display:flex;flex-direction:column;gap:7px}
+.appt-dl{font-size:11px;font-weight:500;color:var(--ink-muted);letter-spacing:0.05em;text-transform:uppercase;padding:6px 0 3px}
+.appt-card{background:var(--white);border:0.5px solid var(--border);border-radius:13px;padding:12px;display:flex;gap:10px;cursor:pointer;transition:all 0.15s}
+.appt-card:hover{border-color:rgba(45,106,79,0.3)}
+.appt-tc{display:flex;flex-direction:column;align-items:center;min-width:40px}
+.appt-t{font-size:12px;font-weight:500}
+.appt-d{font-size:10px;color:var(--ink-faint);margin-top:1px}
+.appt-line{width:1px;flex:1;background:var(--border-soft);margin:3px 0}
+.appt-b{flex:1}
+.appt-name{font-size:13px;font-weight:500;margin-bottom:1px}
+.appt-svc{font-size:12px;color:var(--ink-muted)}
+.appt-addr{font-size:11px;color:var(--ink-faint);margin-top:2px}
+.appt-status{font-size:10px;padding:2px 7px;border-radius:100px;margin-top:5px;display:inline-block;font-weight:500}
+.s-conf{background:var(--green-pale);color:var(--green)}
+.s-pend{background:var(--amber-pale);color:var(--amber)}
+
+/* SETTINGS */
+.sett-list{padding:14px;display:flex;flex-direction:column;gap:7px;padding-bottom:80px}
+.sett-sec{font-size:10px;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink-faint);font-weight:500;padding:6px 0 3px}
+.sett-karen-card{background:var(--ink);border-radius:14px;padding:14px;display:flex;align-items:center;gap:12px;margin-bottom:4px}
+.sett-k-av{width:44px;height:44px;border-radius:50%;background:var(--green-pale);display:flex;align-items:center;justify-content:center;font-family:'Lora',serif;font-size:17px;color:var(--green);flex-shrink:0}
+.sett-k-name{font-family:'Lora',serif;font-size:15px;color:var(--cream)}
+.sett-k-sub{font-size:11px;color:rgba(250,248,243,0.45);margin-top:1px}
+.sett-k-badge{padding:3px 10px;background:rgba(82,183,136,0.2);border-radius:100px;font-size:11px;color:var(--green-mid);font-weight:500;margin-left:auto}
+.sett-item{background:var(--white);border:0.5px solid var(--border);border-radius:13px;padding:12px 14px;display:flex;align-items:center;gap:10px;cursor:pointer;transition:all 0.15s}
+.sett-item:hover{border-color:rgba(45,106,79,0.3)}
+.sett-icon{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sett-text{flex:1}
+.sett-name{font-size:13px;font-weight:500}
+.sett-desc{font-size:11px;color:var(--ink-muted);margin-top:1px}
+.sett-arr{color:var(--ink-faint)}
+.sett-toggle{width:42px;height:24px;border-radius:12px;background:var(--green);border:none;cursor:pointer;position:relative;transition:background 0.2s;flex-shrink:0}
+.sett-toggle::after{content:'';position:absolute;top:3px;right:3px;width:18px;height:18px;border-radius:50%;background:white;transition:transform 0.2s}
+.sett-toggle.off{background:var(--border)}
+.sett-toggle.off::after{transform:translateX(-18px)}
+
+/* MODAL */
+.modal-ov{display:none;position:fixed;inset:0;background:rgba(26,25,23,0.5);z-index:200;align-items:flex-end;backdrop-filter:blur(4px)}
+.modal-ov.open{display:flex}
+.modal-sheet{background:var(--white);border-radius:18px 18px 0 0;padding:18px;width:100%;max-height:80vh;overflow-y:auto;animation:slide-up 0.3s ease-out}
+@keyframes slide-up{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.modal-handle{width:34px;height:4px;border-radius:2px;background:var(--border);margin:0 auto 18px}
+.modal-title{font-family:'Lora',serif;font-size:19px;font-weight:400;margin-bottom:3px}
+.modal-sub{font-size:13px;color:var(--ink-muted);margin-bottom:16px}
+.modal-btns{display:flex;flex-direction:column;gap:7px;margin-top:14px}
+.m-btn{padding:13px;border-radius:11px;font-size:14px;font-family:'DM Sans',sans-serif;font-weight:500;cursor:pointer;transition:all 0.2s;border:none;text-align:center}
+.m-btn.pri{background:var(--green);color:white}
+.m-btn.sec{background:var(--cream);color:var(--ink)}
+.m-btn.dan{background:var(--red-pale);color:var(--red)}
+.m-btn:hover{opacity:0.85}
+
+/* FAB */
+.fab{position:fixed;bottom:72px;right:14px;width:50px;height:50px;border-radius:50%;background:var(--green);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(45,106,79,0.35);transition:all 0.2s;z-index:10}
+.fab:hover{transform:scale(1.07);background:var(--ink)}
+
+@media(max-width:600px){.lp-nav-links{display:none}.lp-footer{flex-direction:column;align-items:flex-start}}
+</style>
+</head>
+<body>
+
+<!-- ════════ LANDING PAGE ════════ -->
+<div class="view active" id="view-landing">
+<nav class="lp-nav">
+  <div class="lp-logo">Karen<span>.</span></div>
+  <ul class="lp-nav-links">
+    <li><a href="#wie">Wie es funktioniert</a></li>
+    <li><a href="#branchen">Für wen</a></li>
+    <li><a href="#preise">Preise</a></li>
+    <li><a href="#" onclick="startOnboarding()" class="btn-primary" style="padding:8px 18px;font-size:13px">Kostenlos starten</a></li>
+  </ul>
+</nav>
+
+<div class="lp-hero">
+  <div class="lp-badge"><div class="badge-dot"></div>Jetzt in der Beta — kostenlos testen</div>
+  <h1 class="lp-h1">Die Mitarbeiterin<br>die <em>nie fehlt.</em></h1>
+  <p class="lp-sub">Karen nimmt Anrufe an, bucht Termine und antwortet auf Nachrichten — 24 Stunden, 7 Tage. Für jeden Betrieb.</p>
+  <div class="lp-actions">
+    <button class="btn-primary" style="padding:14px 32px;font-size:15px" onclick="startOnboarding()">Kostenlos starten</button>
+    <button class="btn-secondary" style="padding:14px 22px;font-size:15px" onclick="goToApp()">Demo ansehen</button>
+  </div>
+  <div class="lp-chat-demo">
+    <div class="demo-header">
+      <div class="demo-avatar">K</div>
+      <div><div class="demo-name">Karen · Sanitär Meier</div><div class="demo-status">Aktiv</div></div>
+    </div>
+    <div class="demo-messages">
+      <div class="demo-msg in m1">Hallo, hätten Sie nächste Woche Zeit für einen undichten Wasserhahn?</div>
+      <div class="demo-msg out m2">Hallo! Natürlich — Donnerstag 15 Uhr wäre noch frei. Passt das?</div>
+      <div class="demo-msg in m3">Ja perfekt, Donnerstag 15 Uhr</div>
+      <div class="demo-msg out m4">Eingetragen. Herr Meier freut sich. Darf ich kurz Ihre Adresse notieren?</div>
+    </div>
+  </div>
+</div>
+
+<div class="lp-trust">
+  <div class="trust-item"><svg class="trust-check" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6" fill="#D8F3DC"/><path d="M4.5 7l2 2 3-3" stroke="#2D6A4F" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>Keine App nötig</div>
+  <div class="trust-item"><svg class="trust-check" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6" fill="#D8F3DC"/><path d="M4.5 7l2 2 3-3" stroke="#2D6A4F" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>Setup in 10 Minuten</div>
+  <div class="trust-item"><svg class="trust-check" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6" fill="#D8F3DC"/><path d="M4.5 7l2 2 3-3" stroke="#2D6A4F" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>24/7 verfügbar</div>
+  <div class="trust-item"><svg class="trust-check" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6" fill="#D8F3DC"/><path d="M4.5 7l2 2 3-3" stroke="#2D6A4F" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>DSGVO konform</div>
+</div>
+
+<div class="lp-section" id="wie">
+  <p class="lp-eyebrow">Wie es funktioniert</p>
+  <h2 class="lp-section-title">Einmal einrichten.<br><em>Für immer</em> da.</h2>
+  <div class="steps-row">
+    <div class="step-box"><div class="step-n">01</div><div class="step-t">Betrieb einrichten</div><div class="step-d">Sie erzählen Karen in 10 Minuten von Ihrem Betrieb. Kein Handbuch, kein IT-Experte nötig.</div></div>
+    <div class="step-box"><div class="step-n">02</div><div class="step-t">Karen nimmt ab</div><div class="step-d">WhatsApp, Chat, Telefon. Karen antwortet sofort — als wäre sie seit Jahren dabei.</div></div>
+    <div class="step-box"><div class="step-n">03</div><div class="step-t">Termine automatisch</div><div class="step-d">Karen bucht direkt in Ihren Kalender. Keine Zettel, kein Hin und Her.</div></div>
+    <div class="step-box"><div class="step-n">04</div><div class="step-t">Täglich informiert</div><div class="step-d">Jeden Morgen eine kurze Zusammenfassung per WhatsApp. Was lief, was aussteht.</div></div>
+  </div>
+</div>
+
+<div class="lp-section" id="branchen" style="padding-top:0">
+  <p class="lp-eyebrow">Für wen ist Karen</p>
+  <h2 class="lp-section-title">Für jeden der<br><em>nie genug Zeit</em> hat.</h2>
+  <div class="industry-grid">
+    <div class="ind-card"><div class="ind-icon">🔧</div><div class="ind-name">Handwerk</div><div class="ind-ex">Elektriker, Sanitär, Maler</div></div>
+    <div class="ind-card"><div class="ind-icon">⚕️</div><div class="ind-name">Arztpraxen</div><div class="ind-ex">Termine, Rückfragen</div></div>
+    <div class="ind-card"><div class="ind-icon">⚖️</div><div class="ind-name">Kanzleien</div><div class="ind-ex">Anwälte, Steuerberater</div></div>
+    <div class="ind-card"><div class="ind-icon">✂️</div><div class="ind-name">Beauty & Wellness</div><div class="ind-ex">Friseur, Kosmetik</div></div>
+    <div class="ind-card"><div class="ind-icon">🍽️</div><div class="ind-name">Gastronomie</div><div class="ind-ex">Reservierungen</div></div>
+    <div class="ind-card"><div class="ind-icon">🏠</div><div class="ind-name">Immobilien</div><div class="ind-ex">Besichtigungen</div></div>
+  </div>
+</div>
+
+<div class="lp-section" id="preise">
+  <p class="lp-eyebrow">Preise</p>
+  <h2 class="lp-section-title">Weniger als eine<br><em>Stunde Lohn.</em> Pro Monat.</h2>
+  <div class="pricing-row">
+    <div class="price-card">
+      <div class="price-tag">Starter</div>
+      <div class="price-name">Karen Basis</div>
+      <div class="price-amt">79</div>
+      <div class="price-per">€ / Monat</div>
+      <ul class="price-feats">
+        <li><span class="pf-check">✓</span>WhatsApp & Chat</li>
+        <li><span class="pf-check">✓</span>Automatische Terminbuchung</li>
+        <li><span class="pf-check">✓</span>Tägliche Zusammenfassung</li>
+        <li><span class="pf-check">✓</span>Bis 200 Gespräche/Monat</li>
+      </ul>
+      <button class="price-btn" onclick="startOnboarding()">Jetzt starten</button>
+    </div>
+    <div class="price-card feat">
+      <div class="price-tag">Beliebt</div>
+      <div class="price-name">Karen Pro</div>
+      <div class="price-amt">149</div>
+      <div class="price-per">€ / Monat</div>
+      <ul class="price-feats">
+        <li><span class="pf-check">✓</span>Alles aus Basis</li>
+        <li><span class="pf-check">✓</span>Telefonannahme 24/7</li>
+        <li><span class="pf-check">✓</span>Eigene Karen-Nummer</li>
+        <li><span class="pf-check">✓</span>Unbegrenzte Gespräche</li>
+        <li><span class="pf-check">✓</span>Google-Bewertungs-Anfragen</li>
+      </ul>
+      <button class="price-btn" onclick="startOnboarding()">Jetzt starten</button>
+    </div>
+    <div class="price-card">
+      <div class="price-tag">Teams</div>
+      <div class="price-name">Karen Business</div>
+      <div class="price-amt">299</div>
+      <div class="price-per">€ / Monat</div>
+      <ul class="price-feats">
+        <li><span class="pf-check">✓</span>Alles aus Pro</li>
+        <li><span class="pf-check">✓</span>Mehrere Mitarbeiter</li>
+        <li><span class="pf-check">✓</span>Eigenes Branding</li>
+        <li><span class="pf-check">✓</span>API-Anbindung</li>
+      </ul>
+      <button class="price-btn" onclick="startOnboarding()">Kontakt aufnehmen</button>
+    </div>
+  </div>
+</div>
+
+<div class="lp-quote">
+  <p class="lp-quote-text">"Kein Betrieb soll einen Auftrag verlieren weil er gerade <em>beim Kunden</em> war."</p>
+  <p class="lp-quote-sub">— Die Idee hinter Karen</p>
+</div>
+
+<div class="lp-cta-section" id="jetzt">
+  <p class="lp-eyebrow" style="text-align:center">Beta — kostenlos</p>
+  <h2 class="lp-section-title" style="text-align:center;max-width:400px;margin:0 auto 0.5rem">Seien Sie einer der <em>ersten Betriebe.</em></h2>
+  <p style="font-size:14px;color:var(--ink-muted);text-align:center;max-width:380px;margin:0 auto;line-height:1.6">Karen kostenlos einrichten. Kein Risiko, kein Vertrag. Einfach anfangen.</p>
+  <div style="display:flex;justify-content:center;margin-top:1.5rem">
+    <button class="btn-primary" style="padding:16px 36px;font-size:16px" onclick="startOnboarding()">Karen jetzt einrichten →</button>
+  </div>
+  <p class="waitlist-note" style="text-align:center;margin-top:12px">Oder zuerst testen: <a href="#" onclick="goToApp()" style="color:var(--green);text-decoration:none">Demo ansehen</a></p>
+</div>
+
+<footer class="lp-footer">
+  <div class="footer-logo">Karen<span>.</span></div>
+  <ul class="footer-links"><li><a href="#">Datenschutz</a></li><li><a href="#">Impressum</a></li></ul>
+  <p class="footer-copy">© 2025 Karen. Gemacht in Deutschland.</p>
+</footer>
+</div>
+
+<!-- ════════ ONBOARDING ════════ -->
+<div class="view" id="view-onboarding">
+<div class="ob-wrap">
+  <nav class="ob-nav">
+    <div class="lp-logo">Karen<span>.</span></div>
+    <div id="obNavInfo" style="font-size:12px;color:var(--ink-muted)">Schritt 1 von 6</div>
+  </nav>
+  <div class="ob-progress"><div class="ob-progress-fill" id="obProgress" style="width:16%"></div></div>
+  <div class="ob-page">
+
+    <!-- Step 1 -->
+    <div class="ob-step active" id="obs-1">
+      <div class="ob-dots"><div class="ob-dot cur"></div><div class="ob-dot"></div><div class="ob-dot"></div><div class="ob-dot"></div><div class="ob-dot"></div><div class="ob-dot"></div></div>
+      <p class="ob-eyebrow">Schritt 1 — Ihr Betrieb</p>
+      <h2 class="ob-title">Herzlich willkommen.<br>Stellen wir <em>Karen vor.</em></h2>
+      <p class="ob-sub">Karen lernt Ihren Betrieb in ein paar Minuten kennen. Danach antwortet sie für Sie — automatisch.</p>
+      <div class="ob-fields">
+        <div class="ob-field" id="oef-bizname">
+          <label>Name Ihres Betriebs</label>
+          <input type="text" id="ob-bizName" placeholder="z.B. Sanitär Meier GmbH" oninput="obUpdatePreview()">
+          <span class="err">Bitte geben Sie den Betriebsnamen ein.</span>
+        </div>
+        <div class="ob-field" id="oef-owner">
+          <label>Ihr Name</label>
+          <input type="text" id="ob-ownerName" placeholder="z.B. Thomas Meier" oninput="obUpdatePreview()">
+          <span class="err">Bitte geben Sie Ihren Namen ein.</span>
+        </div>
+        <div class="ob-field">
+          <label>Art des Betriebs</label>
+          <select id="ob-bizType" onchange="obUpdatePreview()">
+            <option value="">Bitte wählen...</option>
+            <option>Sanitär & Heizungsbau</option><option>Elektriker</option><option>Malerbetrieb</option>
+            <option>Arztpraxis</option><option>Zahnarztpraxis</option><option>Steuerberatung</option>
+            <option>Rechtsanwaltskanzlei</option><option>Friseursalon</option><option>Kosmetik & Beauty</option>
+            <option>Restaurant & Gastronomie</option><option>Sonstiges</option>
+          </select>
+        </div>
+        <div class="ob-field" id="oef-loc">
+          <label>Standort</label>
+          <input type="text" id="ob-loc" placeholder="z.B. Ennigerloh, NRW" oninput="obUpdatePreview()">
+          <span class="err">Bitte geben Sie Ihren Standort ein.</span>
+        </div>
+      </div>
+      <div class="ob-preview">
+        <div class="ob-preview-header">
+          <div class="ob-preview-avatar">K</div>
+          <div><div class="ob-preview-name" id="ob-prevName">Ihr Betrieb</div><div class="ob-preview-status">Karen ist aktiv</div></div>
+        </div>
+        <div class="ob-preview-msg" id="ob-prevMsg">Guten Tag, wie kann ich Ihnen helfen?</div>
+      </div>
+      <div class="btn-row"><button class="btn-next" onclick="obNext(1)">Weiter →</button></div>
+    </div>
+
+    <!-- Step 2 -->
+    <div class="ob-step" id="obs-2">
+      <div class="ob-dots"><div class="ob-dot done"></div><div class="ob-dot cur"></div><div class="ob-dot"></div><div class="ob-dot"></div><div class="ob-dot"></div><div class="ob-dot"></div></div>
+      <p class="ob-eyebrow">Schritt 2 — Leistungen</p>
+      <h2 class="ob-title">Was bieten<br>Sie <em>an?</em></h2>
+      <p class="ob-sub">Karen erklärt Ihren Kunden was Sie machen. Mindestens 1 Leistung hinzufügen.</p>
+      <div class="ob-fields">
+        <div class="ob-field">
+          <label>Leistungen</label>
+          <div class="tag-wrap">
+            <div class="tags" id="ob-svcTags"></div>
+            <div class="tag-row">
+              <input type="text" id="ob-svcInput" placeholder="z.B. Rohrbruch, Heizung..." onkeydown="obTagKey(event,'svc')">
+              <button class="tag-add" onclick="obAddTag('svc')">+ Hinzufügen</button>
+            </div>
+          </div>
+        </div>
+        <div class="ob-field">
+          <label>Kurze Beschreibung (optional)</label>
+          <textarea id="ob-desc" rows="3" placeholder="Was macht Ihren Betrieb besonders?"></textarea>
+        </div>
+      </div>
+      <div class="btn-row"><button class="btn-back" onclick="obPrev(2)">← Zurück</button><button class="btn-next" onclick="obNext(2)">Weiter →</button></div>
+    </div>
+
+    <!-- Step 3 -->
+    <div class="ob-step" id="obs-3">
+      <div class="ob-dots"><div class="ob-dot done"></div><div class="ob-dot done"></div><div class="ob-dot cur"></div><div class="ob-dot"></div><div class="ob-dot"></div><div class="ob-dot"></div></div>
+      <p class="ob-eyebrow">Schritt 3 — Preise & Zeiten</p>
+      <h2 class="ob-title">Was kosten<br>Ihre <em>Leistungen?</em></h2>
+      <p class="ob-sub">Karen nennt nur Preise die Sie hier eintragen. Was leer bleibt, gibt sie nicht weiter.</p>
+      <div class="ob-fields">
+        <div class="ob-field"><label>Stundensatz / Grundpreis</label><input type="text" id="ob-priceBase" placeholder="z.B. 85€/h oder ab 50€"></div>
+        <div class="ob-field"><label>Notdienst (falls zutreffend)</label><input type="text" id="ob-priceEmerg" placeholder="z.B. ab 150€ nachts & wochenends"></div>
+      </div>
+      <div class="ob-field">
+        <label>Öffnungszeiten</label>
+        <div class="hours-grid">
+          <span class="hours-label">Mo – Fr</span>
+          <input type="text" id="ob-moFrS" placeholder="7:00" style="text-align:center">
+          <input type="text" id="ob-moFrE" placeholder="17:00" style="text-align:center">
+          <span class="hours-label">Samstag</span>
+          <input type="text" id="ob-saS" placeholder="8:00" style="text-align:center">
+          <input type="text" id="ob-saE" placeholder="13:00" style="text-align:center">
+          <span class="hours-label">Sonntag</span>
+          <input type="text" id="ob-soS" placeholder="Geschlossen" style="text-align:center">
+          <input type="text" id="ob-soE" placeholder="oder Notdienst" style="text-align:center">
+        </div>
+      </div>
+      <div class="btn-row" style="margin-top:1.5rem"><button class="btn-back" onclick="obPrev(3)">← Zurück</button><button class="btn-next" onclick="obNext(3)">Weiter →</button></div>
+    </div>
+
+    <!-- Step 4 -->
+    <div class="ob-step" id="obs-4">
+      <div class="ob-dots"><div class="ob-dot done"></div><div class="ob-dot done"></div><div class="ob-dot done"></div><div class="ob-dot cur"></div><div class="ob-dot"></div><div class="ob-dot"></div></div>
+      <p class="ob-eyebrow">Schritt 4 — Kontakt</p>
+      <h2 class="ob-title">Wohin leitet<br>Karen <em>weiter?</em></h2>
+      <p class="ob-sub">Bei Notfällen leitet Karen sofort an Sie weiter. Diese Nummer bleibt unsichtbar für Kunden.</p>
+      <div class="ob-fields">
+        <div class="ob-field" id="oef-phone">
+          <label>Ihre Handynummer</label>
+          <input type="tel" id="ob-phone" placeholder="+49 151 00000000">
+          <span class="hint">Nur für interne Weiterleitungen — Kunden sehen diese Nummer nicht.</span>
+          <span class="err">Bitte geben Sie Ihre Nummer ein.</span>
+        </div>
+        <div class="ob-field"><label>E-Mail (für tägliche Zusammenfassung)</label><input type="email" id="ob-email" placeholder="ihre@email.de"></div>
+      </div>
+      <div class="ob-field" style="margin-bottom:1.5rem">
+        <label>Notfall-Stichwörter</label>
+        <div class="tag-wrap" style="margin-top:7px">
+          <div class="tags" id="ob-emTags"></div>
+          <div class="tag-row">
+            <input type="text" id="ob-emInput" placeholder="z.B. Rohrbruch, Gasgeruch..." onkeydown="obTagKey(event,'em')">
+            <button class="tag-add" onclick="obAddTag('em')">+ Hinzufügen</button>
+          </div>
+        </div>
+        <span class="hint" style="margin-top:5px;display:block">Karen leitet bei diesen Stichwörtern sofort weiter.</span>
+      </div>
+      <div class="btn-row"><button class="btn-back" onclick="obPrev(4)">← Zurück</button><button class="btn-next" onclick="obNext(4)">Weiter →</button></div>
+    </div>
+
+    <!-- Step 5 -->
+    <div class="ob-step" id="obs-5">
+      <div class="ob-dots"><div class="ob-dot done"></div><div class="ob-dot done"></div><div class="ob-dot done"></div><div class="ob-dot done"></div><div class="ob-dot cur"></div><div class="ob-dot"></div></div>
+      <p class="ob-eyebrow">Schritt 5 — Karens Stil</p>
+      <h2 class="ob-title">Wie soll Karen<br><em>klingen?</em></h2>
+      <p class="ob-sub">Karen passt sich Ihrem Betrieb an.</p>
+      <div class="radio-opts" id="ob-toneGroup">
+        <div class="radio-opt sel" onclick="obSelectTone(this,'warm')">
+          <div class="radio-circle"><div class="radio-inner"></div></div>
+          <div class="radio-text"><div class="rt">Warm & persönlich</div><div class="rd">"Guten Tag, ich helfe Ihnen gerne weiter — was kann ich tun?"</div></div>
+        </div>
+        <div class="radio-opt" onclick="obSelectTone(this,'professional')">
+          <div class="radio-circle"><div class="radio-inner"></div></div>
+          <div class="radio-text"><div class="rt">Professionell & direkt</div><div class="rd">"Sanitär Meier, guten Tag. Womit kann ich helfen?"</div></div>
+        </div>
+        <div class="radio-opt" onclick="obSelectTone(this,'casual')">
+          <div class="radio-circle"><div class="radio-inner"></div></div>
+          <div class="radio-text"><div class="rt">Locker & freundlich</div><div class="rd">"Hey, schön dass Sie sich melden — was kann ich tun?"</div></div>
+        </div>
+      </div>
+      <div class="ob-field" style="margin-top:1.25rem">
+        <label>Sonstiges das Karen wissen sollte (optional)</label>
+        <textarea id="ob-note" rows="3" placeholder="z.B. Wir machen keine Kanalarbeiten. Bitte immer nach Adresse fragen."></textarea>
+      </div>
+      <div class="btn-row"><button class="btn-back" onclick="obPrev(5)">← Zurück</button><button class="btn-next" onclick="obNext(5)">Karen einrichten →</button></div>
+    </div>
+
+    <!-- Step 6 - Done -->
+    <div class="ob-step" id="obs-6">
+      <div class="ob-dots"><div class="ob-dot done"></div><div class="ob-dot done"></div><div class="ob-dot done"></div><div class="ob-dot done"></div><div class="ob-dot done"></div><div class="ob-dot cur"></div></div>
+      <div class="done-icon">
+        <svg width="26" height="26" viewBox="0 0 26 26" fill="none"><path d="M5 13l5 5 11-11" stroke="#2D6A4F" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <p class="ob-eyebrow" style="text-align:center">Karen ist bereit</p>
+      <h2 class="ob-title" style="text-align:center;margin-bottom:0.4rem">Willkommen,<br><em id="ob-doneName">Thomas.</em></h2>
+      <p class="ob-sub" style="text-align:center">Karen kennt jetzt Ihren Betrieb. Hier ist Ihre Zusammenfassung:</p>
+      <div class="summary-card" id="ob-summaryCard"></div>
+      <div class="btn-row" style="flex-direction:column">
+        <button class="btn-next" onclick="goToApp()">Karen jetzt testen →</button>
+        <button class="btn-back" style="text-align:center" onclick="goToApp()">Zum Dashboard</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+</div>
+
+<!-- ════════ APP ════════ -->
+<div class="view" id="view-app">
+<div class="app-wrap">
+  <div class="app-topnav">
+    <div class="app-logo">Karen<span>.</span></div>
+    <div class="app-biz-pill"><div class="biz-pill"><div class="biz-dot"></div><span id="app-bizName">Sanitär Meier</span></div></div>
+    <button style="width:34px;height:34px;border-radius:50%;border:0.5px solid var(--border);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center" onclick="openModal('notif')">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1.5a4.5 4.5 0 0 1 4.5 4.5v2.5l1.5 2H2l1.5-2V6A4.5 4.5 0 0 1 8 1.5z" stroke="currentColor" stroke-width="1.2"/><path d="M6.5 13.5a1.5 1.5 0 0 0 3 0" stroke="currentColor" stroke-width="1.2"/></svg>
+    </button>
+  </div>
+  <div class="app-tabbar">
+    <button class="app-tab active" onclick="showAppScreen('home',this)"><svg viewBox="0 0 18 18" fill="none"><path d="M2.5 7.5L9 2l6.5 5.5V16H12v-4H6v4H2.5V7.5z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg><span>Heute</span><div class="app-tab-ind"></div></button>
+    <button class="app-tab" onclick="showAppScreen('chat',this)"><svg viewBox="0 0 18 18" fill="none"><path d="M2.5 4.5a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H6l-3.5 2.5V4.5z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg><span>Gespräche</span><div class="app-tab-ind"></div></button>
+    <button class="app-tab" onclick="showAppScreen('karen',this)"><svg viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="7" stroke="currentColor" stroke-width="1.2"/><path d="M9 6v4M9 12v.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg><span>Karen</span><div class="app-tab-ind"></div></button>
+    <button class="app-tab" onclick="showAppScreen('cal',this)"><svg viewBox="0 0 18 18" fill="none"><rect x="2" y="3.5" width="14" height="12" rx="2" stroke="currentColor" stroke-width="1.2"/><path d="M2 7.5h14M6 1.5v2M12 1.5v2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg><span>Termine</span><div class="app-tab-ind"></div></button>
+    <button class="app-tab" onclick="showAppScreen('sett',this)"><svg viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="2.5" stroke="currentColor" stroke-width="1.2"/><path d="M9 2v2M9 14v2M2 9h2M14 9h2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg><span>Einstellungen</span><div class="app-tab-ind"></div></button>
+  </div>
+  <div class="app-screens">
+
+    <!-- HOME -->
+    <div class="app-screen active" id="as-home">
+      <div class="home-hdr">
+        <div class="home-greet">Guten Morgen, <em id="app-ownerFirst">Thomas.</em></div>
+        <div class="home-date">Heute, 13. April · Karen war aktiv</div>
+      </div>
+      <div class="stats-row">
+        <div class="stat-c"><div class="stat-n g">4</div><div class="stat-l">Neue Nachrichten</div></div>
+        <div class="stat-c"><div class="stat-n">3</div><div class="stat-l">Termine heute</div></div>
+        <div class="stat-c"><div class="stat-n a">1</div><div class="stat-l">Wartet auf Sie</div></div>
+      </div>
+      <div class="ai-summary">
+        <div class="ai-sum-label">Karens Zusammenfassung</div>
+        <div class="ai-sum-text" id="app-summary">Heute hat Karen 4 Anfragen beantwortet. Frau Schulz möchte Donnerstag einen Termin — ich brauche Ihre Bestätigung. Alles läuft.</div>
+        <button class="ai-sum-btn" onclick="refreshSummary()">Aktualisieren ↻</button>
+      </div>
+      <div class="sec-hdr"><span class="sec-title">Letzte Aktivitäten</span><span class="sec-link" onclick="showAppScreen('chat',document.querySelectorAll('.app-tab')[1])">Alle</span></div>
+      <div class="activity-list">
+        <div class="act-item" onclick="openConv('schulz')"><div class="act-icon book"><svg width="15" height="15" viewBox="0 0 15 15" fill="none"><rect x="1.5" y="2.5" width="12" height="10" rx="1.5" stroke="#2D6A4F" stroke-width="1.1"/><path d="M1.5 6h12M5 1v2M10 1v2" stroke="#2D6A4F" stroke-width="1.1" stroke-linecap="round"/></svg></div><div class="act-body"><div class="act-top"><span class="act-name">Monika Schulz</span><span class="act-time">14:32</span></div><div class="act-text">Möchte Termin für undichten Wasserhahn — Donnerstag nachmittag</div><span class="act-badge b-book">Termin ausstehend</span></div></div>
+        <div class="act-item" onclick="openConv('fischer')"><div class="act-icon quest"><svg width="15" height="15" viewBox="0 0 15 15" fill="none"><circle cx="7.5" cy="7.5" r="6" stroke="#185FA5" stroke-width="1.1"/><path d="M7.5 10v-1M7.5 5a2 2 0 0 1 0 3.5" stroke="#185FA5" stroke-width="1.2" stroke-linecap="round"/></svg></div><div class="act-body"><div class="act-top"><span class="act-name">Klaus Fischer</span><span class="act-time">13:15</span></div><div class="act-text">Preisfrage Heizungswartung — Karen hat geantwortet</div><span class="act-badge b-quest">Beantwortet</span></div></div>
+        <div class="act-item" onclick="openConv('wagner')"><div class="act-icon emrg"><svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M7.5 1.5L13.5 13H1.5L7.5 1.5z" stroke="#A32D2D" stroke-width="1.1" stroke-linejoin="round"/><path d="M7.5 6v3M7.5 11v.5" stroke="#A32D2D" stroke-width="1.3" stroke-linecap="round"/></svg></div><div class="act-body"><div class="act-top"><span class="act-name">Petra Wagner</span><span class="act-time">10:04</span></div><div class="act-text">Notfall Rohrbruch — Karen hat sofort weitergeleitet</div><span class="act-badge b-emrg">Weitergeleitet</span></div></div>
+      </div>
+    </div>
+
+    <!-- CHAT LIST + DETAIL -->
+    <div class="app-screen" id="as-chat">
+      <div id="conv-list-wrap" style="display:flex;flex-direction:column;flex:1">
+        <div class="chat-search"><input placeholder="Gespräch suchen..." oninput="filterConvs(this.value)"></div>
+        <div class="conv-list">
+          <div class="conv-item unread" onclick="openConv('schulz')"><div class="conv-av">MS</div><div class="conv-body"><div class="conv-top"><span class="conv-name">Monika Schulz</span><span class="conv-time">14:32</span></div><div class="conv-prev k">Karen: Donnerstag 15 Uhr wäre noch frei...</div></div><div class="unread-dot"></div></div>
+          <div class="conv-item" onclick="openConv('fischer')"><div class="conv-av">KF</div><div class="conv-body"><div class="conv-top"><span class="conv-name">Klaus Fischer</span><span class="conv-time">13:15</span></div><div class="conv-prev">Was kostet eine Heizungswartung?</div></div></div>
+          <div class="conv-item" onclick="openConv('wagner')"><div class="conv-av">PW</div><div class="conv-body"><div class="conv-top"><span class="conv-name">Petra Wagner</span><span class="conv-time">10:04</span></div><div class="conv-prev k">Karen: Bitte rufen Sie sofort an...</div></div></div>
+          <div class="conv-item" onclick="openConv('mueller')"><div class="conv-av">HM</div><div class="conv-body"><div class="conv-top"><span class="conv-name">Hans Müller</span><span class="conv-time">09:22</span></div><div class="conv-prev k">Karen: Montag 10 Uhr ist eingetragen.</div></div></div>
+        </div>
+      </div>
+      <div class="chat-detail" id="chatDetail">
+        <div class="cd-header">
+          <button class="cd-back" onclick="closeConv()"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M8 2L4 6l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+          <div class="cd-info"><div class="cd-name" id="cd-name">Monika Schulz</div><div class="cd-sub" id="cd-sub">Heute · WhatsApp</div></div>
+          <span class="cd-tag b-book" id="cd-tag">Termin</span>
+        </div>
+        <div class="cd-msgs" id="cd-msgs"></div>
+        <div class="cd-actions" id="cd-actions">
+          <button class="cd-btn" onclick="openModal('note')">Notiz</button>
+          <button class="cd-btn pri" onclick="openModal('confirm')">Termin bestätigen</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- KAREN LIVE CHAT -->
+    <div class="app-screen" id="as-karen">
+      <div class="karen-chat">
+        <div class="kc-header">
+          <div class="kc-avatar">K</div>
+          <div class="kc-info"><div class="kn">Karen</div><div class="ks">Bereit zu helfen</div></div>
+        </div>
+        <div class="kc-msgs" id="kc-msgs">
+          <div class="kc-sys">Karen Playground — teste wie sie mit Kunden spricht</div>
+          <div class="kc-bwrap karen"><div class="kc-bubble">Guten Tag, Sie sind bei <span id="kc-bizRef">Sanitär Meier</span>. Was kann ich für Sie tun?</div><div class="kc-time">Gerade eben</div></div>
+        </div>
+        <div class="quick-chips">
+          <button class="qchip" onclick="kcQuick('Ich brauche einen Termin nächste Woche')">Termin buchen</button>
+          <button class="qchip" onclick="kcQuick('Was kostet ein Notdienst?')">Preise</button>
+          <button class="qchip" onclick="kcQuick('Ich habe einen Rohrbruch!')">Notfall</button>
+          <button class="qchip" onclick="kcQuick('Habt ihr samstags geöffnet?')">Öffnungszeiten</button>
+        </div>
+        <div class="kc-input">
+          <textarea id="kc-input" placeholder="Schreiben Sie als Kunde..." rows="1" onkeydown="kcKey(event)" oninput="kcResize(this)"></textarea>
+          <button class="kc-send" id="kc-send" onclick="kcSend()"><svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M12.5 7.5L2.5 3l2 4.5-2 4.5z" fill="white"/><path d="M4.5 7.5h8" stroke="white" stroke-width="1.3" stroke-linecap="round"/></svg></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- CALENDAR -->
+    <div class="app-screen" id="as-cal">
+      <div class="cal-hdr"><div class="cal-month" id="calMonth">April 2025</div><div class="cal-navs"><button class="cal-nav" onclick="calChange(-1)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M7 2L4 5l3 3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button class="cal-nav" onclick="calChange(1)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M3 2l3 3-3 3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div></div>
+      <div class="cal-grid" id="calGrid"></div>
+      <div class="appt-list" id="apptList"></div>
+    </div>
+
+    <!-- SETTINGS -->
+    <div class="app-screen" id="as-sett">
+      <div class="sett-list">
+        <div class="sett-karen-card"><div class="sett-k-av">K</div><div><div class="sett-k-name">Karen ist aktiv</div><div class="sett-k-sub" id="sett-biz-sub">Sanitär Meier · seit 3 Tagen</div></div><div class="sett-k-badge">Online</div></div>
+        <div class="sett-sec">Karen anpassen</div>
+        <div class="sett-item" onclick="openModal('edit-biz')"><div class="sett-icon" style="background:var(--green-faint)"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="12" height="12" rx="2" stroke="#2D6A4F" stroke-width="1.2"/><path d="M8 5v6M5 8h6" stroke="#2D6A4F" stroke-width="1.2" stroke-linecap="round"/></svg></div><div class="sett-text"><div class="sett-name">Betriebsdaten</div><div class="sett-desc">Name, Leistungen, Preise</div></div><svg class="sett-arr" width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M4 2l4 4-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="sett-item" onclick="startOnboarding()"><div class="sett-icon" style="background:var(--blue-pale)"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 4.5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2H5.5l-3.5 2V4.5z" stroke="#185FA5" stroke-width="1.2" stroke-linejoin="round"/></svg></div><div class="sett-text"><div class="sett-name">Karen neu einrichten</div><div class="sett-desc">Onboarding wiederholen</div></div><svg class="sett-arr" width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M4 2l4 4-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="sett-sec">Benachrichtigungen</div>
+        <div class="sett-item"><div class="sett-icon" style="background:var(--amber-pale)"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1.5a4.5 4.5 0 0 1 4.5 4.5v3l1.5 2.5H2L3.5 9V6A4.5 4.5 0 0 1 8 1.5z" stroke="#9A6B1F" stroke-width="1.2"/><path d="M6.5 13.5a1.5 1.5 0 0 0 3 0" stroke="#9A6B1F" stroke-width="1.2"/></svg></div><div class="sett-text"><div class="sett-name">Push-Benachrichtigungen</div><div class="sett-desc">Bei neuen Gesprächen</div></div><button class="sett-toggle" onclick="this.classList.toggle('off')"></button></div>
+        <div class="sett-item"><div class="sett-icon" style="background:var(--green-faint)"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="4" width="12" height="9" rx="1.5" stroke="#2D6A4F" stroke-width="1.2"/><path d="M2 7l5 3.5 5-3.5" stroke="#2D6A4F" stroke-width="1.2"/></svg></div><div class="sett-text"><div class="sett-name">Tägliche Zusammenfassung</div><div class="sett-desc">Jeden Morgen per WhatsApp</div></div><button class="sett-toggle" onclick="this.classList.toggle('off')"></button></div>
+        <div class="sett-sec">Konto</div>
+        <div class="sett-item" onclick="goToLanding()"><div class="sett-icon" style="background:var(--red-pale)"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6.5 3H4a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h2.5M10 11l3-3-3-3M13 8H7" stroke="#A32D2D" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="sett-text"><div class="sett-name">Abmelden</div><div class="sett-desc">Zurück zur Startseite</div></div><svg class="sett-arr" width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M4 2l4 4-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      </div>
+    </div>
+  </div>
+
+  <button class="fab" onclick="openModal('new-msg')" title="Neue Nachricht">
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 4v12M4 10h12" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
+  </button>
+</div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-ov" id="modalOv" onclick="closeModal(event)">
+  <div class="modal-sheet"><div class="modal-handle"></div><div id="modalContent"></div></div>
+</div>
+
+<script>
+// ── STATE ──
+let obStep = 1;
+let obTone = 'warm';
+let obTags = { svc: [], em: [] };
+let obData = {};
+let kcHistory = [];
+let kcBusy = false;
+let calDate = new Date(2025, 3, 13);
+
+// ── VIEW NAVIGATION ──
+function showView(id) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.getElementById('view-' + id).classList.add('active');
+  window.scrollTo(0, 0);
+}
+function goToLanding() { showView('landing'); }
+function goToApp() {
+  showView('app');
+  updateAppFromOb();
+  initKcSystem();
+  renderCal();
+}
+
+// ── LANDING ──
+function startOnboarding() {
+  showView('onboarding');
+  obStep = 1;
+  obUpdateNav();
+}
+
+// ── ONBOARDING ──
+function obUpdateNav() {
+  document.getElementById('obNavInfo').textContent = `Schritt ${obStep} von 6`;
+  document.getElementById('obProgress').style.width = `${(obStep / 6) * 100}%`;
+}
+function obGetVal(id) { return (document.getElementById(id)?.value || '').trim(); }
+function obSetErr(fid, show) { document.getElementById(fid)?.classList.toggle('has-err', show); }
+
+function obValidate(step) {
+  if (step === 1) {
+    let ok = true;
+    if (!obGetVal('ob-bizName')) { obSetErr('oef-bizname', true); ok = false; } else obSetErr('oef-bizname', false);
+    if (!obGetVal('ob-ownerName')) { obSetErr('oef-owner', true); ok = false; } else obSetErr('oef-owner', false);
+    if (!obGetVal('ob-loc')) { obSetErr('oef-loc', true); ok = false; } else obSetErr('oef-loc', false);
+    return ok;
+  }
+  if (step === 2 && obTags.svc.length === 0) { alert('Bitte mindestens eine Leistung hinzufügen.'); return false; }
+  if (step === 4 && !obGetVal('ob-phone')) { obSetErr('oef-phone', true); return false; }
+  return true;
+}
+
+function obNext(from) {
+  if (!obValidate(from)) return;
+  document.getElementById(`obs-${from}`).classList.remove('active');
+  obStep = from + 1;
+  obUpdateNav();
+  if (obStep === 6) obBuildSummary();
+  document.getElementById(`obs-${obStep}`).classList.add('active');
+  document.querySelector('.ob-page').scrollTop = 0;
+}
+function obPrev(from) {
+  document.getElementById(`obs-${from}`).classList.remove('active');
+  obStep = from - 1;
+  obUpdateNav();
+  document.getElementById(`obs-${obStep}`).classList.add('active');
+}
+
+function obUpdatePreview() {
+  const name = obGetVal('ob-bizName') || 'Ihr Betrieb';
+  document.getElementById('ob-prevName').textContent = name;
+  document.getElementById('ob-prevMsg').textContent = `Guten Tag, Sie sind bei ${name}. Wie kann ich Ihnen helfen?`;
+}
+
+function obAddTag(type) {
+  const inputId = type === 'svc' ? 'ob-svcInput' : 'ob-emInput';
+  const input = document.getElementById(inputId);
+  const val = input.value.trim();
+  if (!val || obTags[type].includes(val)) { input.value = ''; return; }
+  obTags[type].push(val);
+  obRenderTags(type);
+  input.value = '';
+  input.focus();
+}
+function obRemoveTag(type, val) { obTags[type] = obTags[type].filter(t => t !== val); obRenderTags(type); }
+function obRenderTags(type) {
+  const el = document.getElementById(type === 'svc' ? 'ob-svcTags' : 'ob-emTags');
+  el.innerHTML = obTags[type].map(t => `<span class="tag">${t}<span class="tag-x" onclick="obRemoveTag('${type}','${t}')">×</span></span>`).join('');
+}
+function obTagKey(e, type) { if (e.key === 'Enter') { e.preventDefault(); obAddTag(type); } }
+
+function obSelectTone(el, tone) {
+  document.querySelectorAll('#ob-toneGroup .radio-opt').forEach(o => o.classList.remove('sel'));
+  el.classList.add('sel');
+  obTone = tone;
+}
+
+function obBuildSummary() {
+  obData = {
+    bizName: obGetVal('ob-bizName'),
+    ownerName: obGetVal('ob-ownerName'),
+    bizType: obGetVal('ob-bizType'),
+    location: obGetVal('ob-loc'),
+    services: [...obTags.svc],
+    priceBase: obGetVal('ob-priceBase'),
+    phone: obGetVal('ob-phone'),
+    emergency: [...obTags.em],
+    tone: obTone,
+    note: obGetVal('ob-note')
+  };
+  const first = obData.ownerName.split(' ')[0];
+  document.getElementById('ob-doneName').textContent = first + '.';
+  const rows = [
+    ['Betrieb', obData.bizName],
+    ['Inhaber', obData.ownerName],
+    ['Art', obData.bizType || '—'],
+    ['Standort', obData.location],
+    ['Leistungen', obData.services.join(', ') || '—'],
+    ['Stundensatz', obData.priceBase || '—'],
+    ['Notfall-Keywords', obData.emergency.join(', ') || '—'],
+  ];
+  document.getElementById('ob-summaryCard').innerHTML = rows.map(([k, v]) =>
+    `<div class="sum-row"><span class="sum-k">${k}</span><span class="sum-v">${v}</span></div>`).join('');
+}
+
+function updateAppFromOb() {
+  const name = obData.bizName || 'Sanitär Meier';
+  const owner = obData.ownerName ? obData.ownerName.split(' ')[0] : 'Thomas';
+  document.getElementById('app-bizName').textContent = name;
+  document.getElementById('app-ownerFirst').textContent = owner + '.';
+  document.getElementById('kc-bizRef').textContent = name;
+  document.getElementById('sett-biz-sub').textContent = name + ' · seit heute';
+}
+
+// ── APP NAVIGATION ──
+function showAppScreen(name, tabEl) {
+  document.querySelectorAll('.app-screen').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.app-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('as-' + name).classList.add('active');
+  if (tabEl) tabEl.classList.add('active');
+  if (name === 'cal') renderCal();
+}
+
+// ── CONVERSATIONS ──
+const convData = {
+  schulz: { name: 'Monika Schulz', sub: 'Heute · WhatsApp', tag: 'Termin ausstehend', tagClass: 'b-book', showActions: true,
+    msgs: [
+      { r: 'cust', t: 'Hallo, hätten Sie nächste Woche Zeit für einen undichten Wasserhahn?', time: '14:28' },
+      { r: 'karen', t: 'Hallo Frau Schulz! Natürlich — wann passt es Ihnen? Donnerstag oder Freitag wäre noch frei.', time: '14:29' },
+      { r: 'cust', t: 'Donnerstag nachmittag, ab 15 Uhr?', time: '14:30' },
+      { r: 'karen', t: 'Donnerstag 15 Uhr wäre noch frei. Darf ich kurz Ihre Adresse notieren?', time: '14:31' },
+      { r: 'cust', t: 'Musterstraße 12, Ennigerloh', time: '14:32' },
+    ]},
+  fischer: { name: 'Klaus Fischer', sub: 'Heute · WhatsApp', tag: 'Beantwortet', tagClass: 'b-quest', showActions: false,
+    msgs: [
+      { r: 'cust', t: 'Was kostet eine Heizungswartung?', time: '13:12' },
+      { r: 'karen', t: 'Guten Tag! Eine Heizungswartung berechnen wir ab 85€/h. Kostenvoranschlag ist immer kostenlos — soll ich einen Termin vormerken?', time: '13:13' },
+      { r: 'cust', t: 'Danke, ich melde mich wenn es soweit ist.', time: '13:15' },
+      { r: 'karen', t: 'Sehr gut, dann freuen wir uns auf Ihre Nachricht. Einen schönen Tag noch!', time: '13:15' },
+    ]},
+  wagner: { name: 'Petra Wagner', sub: 'Heute · WhatsApp', tag: 'Notfall', tagClass: 'b-emrg', showActions: false,
+    msgs: [
+      { r: 'cust', t: 'HILFE ich habe einen Rohrbruch alles läuft voll!!!', time: '10:03' },
+      { r: 'karen', t: 'Frau Wagner, bitte rufen Sie sofort Herrn Meier an: +49 151 00000000. Drehen Sie in der Zwischenzeit den Haupthahn zu.', time: '10:03' },
+    ]},
+  mueller: { name: 'Hans Müller', sub: 'Heute · WhatsApp', tag: 'Bestätigt', tagClass: 'b-book', showActions: false,
+    msgs: [
+      { r: 'cust', t: 'Guten Morgen, ich würde gerne mein Badezimmer renovieren lassen.', time: '09:18' },
+      { r: 'karen', t: 'Guten Morgen! Sehr gerne. Montag 10 Uhr oder Mittwoch 14 Uhr wäre frei — was passt?', time: '09:19' },
+      { r: 'cust', t: 'Montag 10 Uhr perfekt', time: '09:21' },
+      { r: 'karen', t: 'Montag 10 Uhr ist eingetragen. Herr Meier freut sich. Darf ich noch Ihre Adresse notieren?', time: '09:22' },
+    ]},
+};
+
+function openConv(id) {
+  const d = convData[id]; if (!d) return;
+  showAppScreen('chat', document.querySelectorAll('.app-tab')[1]);
+  document.getElementById('cd-name').textContent = d.name;
+  document.getElementById('cd-sub').textContent = d.sub;
+  const tag = document.getElementById('cd-tag');
+  tag.textContent = d.tag; tag.className = 'cd-tag ' + d.tagClass;
+  const msgs = document.getElementById('cd-msgs');
+  msgs.innerHTML = '<div class="cd-sys">Gespräch mit Karen</div>';
+  d.msgs.forEach(m => {
+    const w = document.createElement('div');
+    w.className = 'cd-bwrap ' + (m.r === 'karen' ? 'karen' : 'cust');
+    w.innerHTML = `<div class="cd-bubble">${m.t}</div><div class="cd-time">${m.r === 'karen' ? 'Karen · ' : ''}${m.time}</div>`;
+    msgs.appendChild(w);
+  });
+  setTimeout(() => msgs.scrollTop = msgs.scrollHeight, 50);
+  document.getElementById('cd-actions').style.display = d.showActions ? 'flex' : 'none';
+  document.getElementById('conv-list-wrap').style.display = 'none';
+  document.getElementById('chatDetail').classList.add('open');
+}
+
+function closeConv() {
+  document.getElementById('conv-list-wrap').style.display = 'flex';
+  document.getElementById('chatDetail').classList.remove('open');
+}
+
+function filterConvs(val) {
+  document.querySelectorAll('.conv-item').forEach(item => {
+    item.style.display = item.querySelector('.conv-name').textContent.toLowerCase().includes(val.toLowerCase()) ? '' : 'none';
+  });
+}
+
+// ── KAREN LIVE CHAT ──
+let kcSystemPrompt = '';
+
+function initKcSystem() {
+  const biz = obData.bizName || 'Sanitär Meier';
+  const owner = obData.ownerName || 'Thomas Meier';
+  const svcs = obData.services?.length ? obData.services.join(', ') : 'Rohrbruch, Heizung, Badezimmer-Renovierung';
+  const price = obData.priceBase || '85€/h';
+  const emerg = obData.emergency?.length ? obData.emergency.join(', ') : 'rohrbruch, notfall, überschwemmung';
+  const phone = obData.phone || '+49 151 00000000';
+  const toneMap = { warm: 'Warm und persönlich', professional: 'Professionell und direkt', casual: 'Locker und freundlich' };
+  const tone = toneMap[obData.tone || 'warm'];
+
+  kcSystemPrompt = `Du bist Karen — die persönliche Assistentin von ${biz}.
+
+Persönlichkeit: ${tone}. Kurze Sätze. Max 3 Sätze pro Antwort. Wie eine echte WhatsApp-Nachricht.
+Sieze immer. Keine Emojis außer der Kunde nutzt sie. Kein "Gerne helfe ich Ihnen weiter!".
+
+Betrieb: ${biz} · Inhaber: ${owner}
+Leistungen: ${svcs}
+Preise: ${price}
+Notfall-Keywords (sofort weiterleiten): ${emerg} → Nummer: ${phone}
+
+Bei Terminwunsch: Schritt für Schritt fragen (erst wann, dann Adresse). Nie zwei Fragen auf einmal.
+${obData.note ? 'Wichtig: ' + obData.note : ''}`;
+
+  kcHistory = [{ role: 'assistant', content: `Guten Tag, Sie sind bei ${biz}. Was kann ich für Sie tun?` }];
+  document.getElementById('kc-bizRef').textContent = biz;
+}
+
+function kcTime() { return new Date().toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' }); }
+
+function kcAddMsg(role, text) {
+  kcHistory.push({ role, content: text });
+  const container = document.getElementById('kc-msgs');
+  const w = document.createElement('div');
+  w.className = 'kc-bwrap ' + (role === 'assistant' ? 'karen' : 'user');
+  w.innerHTML = `<div class="kc-bubble">${text}</div><div class="kc-time">${role === 'assistant' ? 'Karen · ' : ''}${kcTime()}</div>`;
+  container.appendChild(w);
+  container.scrollTop = container.scrollHeight;
+}
+
+function kcShowTyping() {
+  const c = document.getElementById('kc-msgs');
+  const t = document.createElement('div');
+  t.id = 'kc-typing'; t.className = 'typing';
+  t.innerHTML = '<span></span><span></span><span></span>';
+  c.appendChild(t); c.scrollTop = c.scrollHeight;
+}
+function kcHideTyping() { document.getElementById('kc-typing')?.remove(); }
+
+async function kcSend(text) {
+  const input = document.getElementById('kc-input');
+  const msg = text || input.value.trim();
+  if (!msg || kcBusy) return;
+  input.value = ''; input.style.height = 'auto';
+  kcBusy = true;
+  document.getElementById('kc-send').disabled = true;
+  kcAddMsg('user', msg);
+  kcShowTyping();
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        system: kcSystemPrompt,
+        messages: kcHistory.filter(m => m.role !== 'system').slice(-10)
+      })
+    });
+    const data = await res.json();
+    const reply = data.content?.[0]?.text || 'Ich bin kurz nicht erreichbar. Bitte versuchen Sie es gleich nochmal.';
+    kcHideTyping();
+    kcAddMsg('assistant', reply);
+  } catch(e) {
+    kcHideTyping();
+    kcAddMsg('assistant', 'Entschuldigung, es gab einen kurzen Fehler. Bitte nochmal versuchen.');
+  }
+  kcBusy = false;
+  document.getElementById('kc-send').disabled = false;
+}
+
+function kcQuick(t) { kcSend(t); }
+function kcKey(e) { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); kcSend(); } }
+function kcResize(el) { el.style.height = 'auto'; el.style.height = Math.min(el.scrollHeight, 90) + 'px'; }
+
+// ── CALENDAR ──
+const appointments = [
+  { date: '2025-04-13', time: '10:00', dur: '1h', name: 'Hans Müller', svc: 'Badezimmer Beratung', addr: 'Lindenweg 5', status: 'confirmed' },
+  { date: '2025-04-13', time: '14:00', dur: '2h', name: 'Karl Brandt', svc: 'Heizung Wartung', addr: 'Hauptstr. 22', status: 'confirmed' },
+  { date: '2025-04-17', time: '15:00', dur: '1h', name: 'Monika Schulz', svc: 'Wasserhahn', addr: 'Musterstr. 12', status: 'pending' },
+  { date: '2025-04-15', time: '09:00', dur: '3h', name: 'Familie Richter', svc: 'Badinstallation', addr: 'Schulweg 3', status: 'confirmed' },
+];
+
+function renderCal() {
+  const y = calDate.getFullYear(), m = calDate.getMonth();
+  const months = ['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
+  document.getElementById('calMonth').textContent = `${months[m]} ${y}`;
+  const days = ['Mo','Di','Mi','Do','Fr','Sa','So'];
+  const first = new Date(y, m, 1);
+  let startDow = first.getDay() - 1; if (startDow < 0) startDow = 6;
+  const daysInMonth = new Date(y, m + 1, 0).getDate();
+  const daysInPrev = new Date(y, m, 0).getDate();
+  const today = new Date();
+  const apptDates = new Set(appointments.map(a => a.date));
+  let html = `<div class="cal-days">${days.map(d => `<div class="cal-dl">${d}</div>`).join('')}`;
+  for (let i = 0; i < startDow; i++) html += `<div class="cal-d other">${daysInPrev - startDow + 1 + i}</div>`;
+  for (let d = 1; d <= daysInMonth; d++) {
+    const ds = `${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const isToday = today.getFullYear() === y && today.getMonth() === m && today.getDate() === d;
+    html += `<div class="cal-d${isToday?' today':''}${apptDates.has(ds)?' has-ev':''}" onclick="filterAppts('${ds}')">${d}</div>`;
+  }
+  const rem = 42 - startDow - daysInMonth;
+  for (let d = 1; d <= rem; d++) html += `<div class="cal-d other">${d}</div>`;
+  html += '</div>';
+  document.getElementById('calGrid').innerHTML = html;
+  renderAppts();
+}
+
+function filterAppts(dateStr) { renderAppts(dateStr); }
+
+function renderAppts(filter) {
+  const toShow = filter ? appointments.filter(a => a.date === filter) : appointments.sort((a,b) => a.date.localeCompare(b.date));
+  const dateLabels = {'2025-04-13':'Heute, 13. April','2025-04-15':'Dienstag, 15. April','2025-04-17':'Donnerstag, 17. April'};
+  if (!toShow.length) { document.getElementById('apptList').innerHTML = '<div style="text-align:center;padding:2rem;font-size:13px;color:var(--ink-faint)">Keine Termine an diesem Tag</div>'; return; }
+  const grouped = {};
+  toShow.forEach(a => { if (!grouped[a.date]) grouped[a.date] = []; grouped[a.date].push(a); });
+  document.getElementById('apptList').innerHTML = Object.entries(grouped).map(([date, appts]) =>
+    `<div class="appt-dl">${dateLabels[date] || date}</div>${appts.map(a =>
+      `<div class="appt-card"><div class="appt-tc"><div class="appt-t">${a.time}</div><div class="appt-d">${a.dur}</div><div class="appt-line"></div></div><div class="appt-b"><div class="appt-name">${a.name}</div><div class="appt-svc">${a.svc}</div><div class="appt-addr">${a.addr}</div><span class="appt-status ${a.status==='confirmed'?'s-conf':'s-pend'}">${a.status==='confirmed'?'Bestätigt':'Ausstehend'}</span></div></div>`
+    ).join('')}`
+  ).join('');
+}
+
+function calChange(dir) { calDate.setMonth(calDate.getMonth() + dir); renderCal(); }
+
+// ── AI SUMMARY ──
+async function refreshSummary() {
+  const el = document.getElementById('app-summary');
+  el.textContent = 'Wird generiert...';
+  try {
+    const biz = obData.bizName || 'Sanitär Meier';
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        system: `Du bist Karen, KI-Assistentin für ${biz}. Schreib eine kurze tägliche Zusammenfassung für den Inhaber. Max 3 Sätze. Kein Markdown. Wie eine WhatsApp-Nachricht.`,
+        messages: [{ role: 'user', content: 'Heute: 4 Gespräche. 1 Termin ausstehend (Monika Schulz, Donnerstag 15 Uhr). 1 Notfall weitergeleitet. 2 Fragen beantwortet.' }]
+      })
+    });
+    const data = await res.json();
+    el.textContent = data.content?.[0]?.text || 'Karen hat heute 4 Gespräche geführt. Ein Termin wartet auf Bestätigung.';
+  } catch(e) {
+    el.textContent = 'Karen hat heute 4 Gespräche geführt. Ein Termin wartet auf Ihre Bestätigung.';
+  }
+}
+
+// ── MODALS ──
+const modals = {
+  confirm: `<div class="modal-title">Termin bestätigen</div><div class="modal-sub">Monika Schulz · Donnerstag 15 Uhr · Musterstr. 12</div><div style="background:var(--green-faint);border-radius:11px;padding:13px;font-size:13px;color:var(--green);line-height:1.6;margin-bottom:4px">Karen schickt automatisch eine Bestätigung an Frau Schulz.</div><div class="modal-btns"><button class="m-btn pri" onclick="closeModal();alert('Termin bestätigt! Karen hat Frau Schulz benachrichtigt.')">Bestätigen</button><button class="m-btn sec" onclick="closeModal()">Abbrechen</button></div>`,
+  note: `<div class="modal-title">Notiz hinzufügen</div><div class="modal-sub">Diese Notiz sieht nur Ihr Team.</div><textarea style="width:100%;padding:11px;background:var(--cream);border:0.5px solid var(--border);border-radius:11px;font-size:13px;font-family:'DM Sans',sans-serif;color:var(--ink);resize:none;outline:none;margin-bottom:12px" rows="4" placeholder="z.B. Kunde bevorzugt Vormittags..."></textarea><div class="modal-btns"><button class="m-btn pri" onclick="closeModal()">Speichern</button></div>`,
+  notif: `<div class="modal-title">Benachrichtigungen</div><div class="modal-sub">Heute</div><div style="display:flex;flex-direction:column;gap:7px"><div style="padding:11px 13px;background:var(--amber-pale);border-radius:11px;font-size:13px;color:var(--amber)">Monika Schulz wartet auf Terminbestätigung</div><div style="padding:11px 13px;background:var(--green-faint);border-radius:11px;font-size:13px;color:var(--green)">Karen hat heute 4 Gespräche geführt</div></div><div class="modal-btns"><button class="m-btn sec" onclick="closeModal()">Schließen</button></div>`,
+  'new-msg': `<div class="modal-title">Neue Nachricht</div><div class="modal-sub">Karen schreibt im Namen Ihres Betriebs.</div><div style="display:flex;flex-direction:column;gap:9px;margin-bottom:14px"><input type="tel" placeholder="Handynummer des Kunden" style="width:100%;padding:11px 15px;background:var(--cream);border:0.5px solid var(--border);border-radius:11px;font-size:13px;font-family:'DM Sans',sans-serif;color:var(--ink);outline:none"><textarea rows="3" placeholder="Nachricht..." style="width:100%;padding:11px 15px;background:var(--cream);border:0.5px solid var(--border);border-radius:11px;font-size:13px;font-family:'DM Sans',sans-serif;color:var(--ink);resize:none;outline:none"></textarea></div><div class="modal-btns"><button class="m-btn pri" onclick="closeModal()">Senden</button><button class="m-btn sec" onclick="closeModal()">Abbrechen</button></div>`,
+  'edit-biz': `<div class="modal-title">Betriebsdaten</div><div class="modal-sub">Änderungen werden sofort an Karen übermittelt.</div><div class="modal-btns"><button class="m-btn pri" onclick="closeModal();startOnboarding()">Onboarding wiederholen</button><button class="m-btn sec" onclick="closeModal()">Abbrechen</button></div>`,
+};
+
+function openModal(type) {
+  document.getElementById('modalContent').innerHTML = modals[type] || `<div class="modal-title">Kommt bald</div><div class="modal-sub">Diese Funktion wird gerade gebaut.</div><div class="modal-btns"><button class="m-btn sec" onclick="closeModal()">Schließen</button></div>`;
+  document.getElementById('modalOv').classList.add('open');
+}
+function closeModal(e) {
+  if (!e || e.target === document.getElementById('modalOv')) document.getElementById('modalOv').classList.remove('open');
+}
+
+// ── INIT ──
+initKcSystem();
+renderCal();
+</script>
+</body>
+</html>
